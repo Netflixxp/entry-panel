@@ -146,98 +146,184 @@ def render_site_html(site: Row, section: str = "home", preview: bool = False) ->
     active[section if section in active else "home"] = "active"
     pages = {
         "home": {
-            "title": site_name,
-            "eyebrow": "Global resource delivery",
-            "intro": f"{tagline} Production-ready distribution for documentation bundles, binary packages, image assets, and static integration files.",
-            "metric": "99.95%",
-            "metric_label": "regional availability",
+            "eyebrow": "Institutional data infrastructure",
+            "title": "Global intelligence for resilient digital markets.",
+            "intro": f"{tagline} {site_name} operates research-grade data delivery, market documentation, and verified resource distribution for enterprise teams.",
+            "metric": "$4.8B",
+            "metric_label": "tracked digital infrastructure exposure",
             "cards": [
-                ("Docs", "Documentation Library", "Stable API references, mirror integration notes, and release manifest formats."),
-                ("Releases", "Package Distribution", "Versioned archives indexed by platform, channel, checksum, and publish time."),
-                ("Media", "Image Resources", "Optimized visual assets for product pages, technical documentation, and portals."),
+                ("Research", "Market Intelligence", "Regional data, release notes, and infrastructure briefs prepared for operations and strategy teams."),
+                ("Infrastructure", "Verified Distribution", "Stable delivery endpoints for documentation, release bundles, manifests, and media resources."),
+                ("Operations", "Continuity Services", "Availability monitoring, mirror validation, and structured resource lifecycle management."),
             ],
             "extra": """
-    <section class="section split">
-      <div class="panel">
-        <h2>Latest Release</h2>
-        <div class="release-row"><span>resource-bundle</span><strong>4.8.2</strong><em>stable</em></div>
-        <div class="release-row"><span>docs-snapshot</span><strong>2026.05</strong><em>current</em></div>
-        <div class="release-row"><span>asset-pack</span><strong>2.14.0</strong><em>optimized</em></div>
+    <section class="section editorial">
+      <div>
+        <span class="panel-label">What we monitor</span>
+        <h2>Data centers, networks, and operational capacity.</h2>
+        <p>Our coverage focuses on digital infrastructure assets, enterprise software delivery channels, regional connectivity, and the operational signals that support long-term planning.</p>
       </div>
-      <div class="panel">
-        <h2>Operational Notes</h2>
-        <p>All public artifacts are published with deterministic paths and checksum manifests. Static resources are cache-friendly and safe for automated retrieval.</p>
-        <ul class="list compact">
-          <li>Immutable release URLs</li>
-          <li>Regional mirror validation</li>
-          <li>Daily manifest refresh</li>
-        </ul>
+      <div class="insight-list">
+        <article><strong>Q2 Infrastructure Brief</strong><span>Capacity expansion across North America and Asia-Pacific.</span></article>
+        <article><strong>Mirror Reliability Notes</strong><span>Operational indicators for public and private resource distribution.</span></article>
+        <article><strong>Data Delivery Index</strong><span>Weekly movement in latency, availability, and release integrity.</span></article>
+      </div>
+    </section>
+    <section class="section panel">
+      <span class="panel-label">Company profile</span>
+      <h2>Built for research, operations, and dependable publication.</h2>
+      <p>Our team maintains a structured resource center for organizations that rely on consistent access to market notes, data infrastructure briefs, release packages, and supporting media. The site is organized around long-lived content, predictable publication schedules, and direct access to verified resources.</p>
+      <div class="profile-grid">
+        <div><strong>Research Coverage</strong><span>Digital infrastructure, data center operations, cloud delivery, and enterprise software distribution.</span></div>
+        <div><strong>Publication Controls</strong><span>Versioned documents, checksum manifests, release retention, and controlled update windows.</span></div>
+        <div><strong>Regional Operations</strong><span>Coverage notes across North America, Europe, and Asia-Pacific business regions.</span></div>
+        <div><strong>Resource Continuity</strong><span>Mirror validation, static delivery reviews, and availability reporting for published assets.</span></div>
+      </div>
+    </section>
+    <section class="section split">
+      <div class="panel quiet">
+        <h2>Operating Principles</h2>
+        <p>We publish deterministic resource paths, checksum-backed release catalogs, and long-lived documentation snapshots for teams that need predictable access over time.</p>
+      </div>
+      <div class="panel quiet">
+        <h2>Coverage Areas</h2>
+        <p>Digital infrastructure, data distribution, cloud delivery operations, research portals, and resource availability across major business regions.</p>
+      </div>
+    </section>
+    <section class="section panel">
+      <span class="panel-label">Latest insights</span>
+      <h2>Recent research notes</h2>
+      <div class="news-grid">
+        <article><strong>Enterprise delivery channels remain focused on verified static assets</strong><p>Operations teams continue to prefer simple, verifiable release paths for critical documents and resource bundles.</p><span>May 2026</span></article>
+        <article><strong>Regional infrastructure planning shifts toward resilient access points</strong><p>Organizations are reviewing resource availability across market regions as infrastructure demand remains elevated.</p><span>May 2026</span></article>
+        <article><strong>Checksum-backed archives reduce support friction</strong><p>Maintained manifest files provide a practical audit trail for downstream publication workflows.</p><span>April 2026</span></article>
+      </div>
+    </section>
+    <section class="section contact-band">
+      <div>
+        <span class="panel-label">Contact</span>
+        <h2>Resource and publication inquiries</h2>
+        <p>For documentation access, archive questions, or regional publication notes, contact the resource coordination desk.</p>
+      </div>
+      <div>
+        <p><strong>Email</strong><br>research@globalresource.example</p>
+        <p><strong>Office</strong><br>1200 Market Street, Suite 410<br>New York, NY 10005</p>
       </div>
     </section>""",
         },
         "docs": {
-            "title": "Documentation",
-            "eyebrow": "Technical reference",
-            "intro": "Reference documents, integration guides, and versioned release notes for resource consumers. Each bundle is published as static HTML with a matching checksum manifest.",
-            "metric": "v4.8",
-            "metric_label": "current documentation snapshot",
+            "eyebrow": "Documentation center",
+            "title": "Structured references for operational teams.",
+            "intro": "Current documentation packages include integration guides, resource delivery practices, release governance, and regional availability notes.",
+            "metric": "184",
+            "metric_label": "maintained reference documents",
             "cards": [
-                ("Reference", "API Reference", "Stable endpoint descriptions, response examples, and manifest fields."),
-                ("Operations", "Mirror Guide", "Cache refresh, checksum validation, DNS notes, and regional mirror practices."),
-                ("History", "Release Notes", "Version history and compatibility notes for published bundles."),
+                ("Library", "Resource Handbook", "Long-form operating guidance for release assets, static catalogs, and delivery practices."),
+                ("Governance", "Release Controls", "Change windows, checksum policies, retention notes, and publication review trails."),
+                ("Regions", "Availability Notes", "Connectivity observations and operational summaries for supported business regions."),
             ],
             "extra": """
     <section class="section panel">
-      <h2>Documentation Index</h2>
-      <div class="search-box">Search documentation, manifests, integrations...</div>
+      <h2>Reference Index</h2>
+      <div class="search-box">Search market notes, infrastructure briefs, release controls...</div>
       <table class="content-table">
-        <tr><th>Document</th><th>Version</th><th>Status</th><th>Updated</th></tr>
-        <tr><td>Resource Manifest Schema</td><td>4.8</td><td>Current</td><td>2026-05-24</td></tr>
-        <tr><td>Mirror Integration Guide</td><td>3.9</td><td>Current</td><td>2026-05-20</td></tr>
-        <tr><td>Static Asset Naming Policy</td><td>2.7</td><td>Maintained</td><td>2026-05-12</td></tr>
+        <tr><th>Document</th><th>Category</th><th>Status</th><th>Updated</th></tr>
+        <tr><td>Digital Infrastructure Overview</td><td>Research</td><td>Current</td><td>2026-05-24</td></tr>
+        <tr><td>Resource Delivery Controls</td><td>Operations</td><td>Current</td><td>2026-05-20</td></tr>
+        <tr><td>Mirror Availability Methodology</td><td>Reliability</td><td>Maintained</td><td>2026-05-12</td></tr>
+        <tr><td>Regional Data Access Notes</td><td>Coverage</td><td>Current</td><td>2026-05-08</td></tr>
       </table>
+    </section>
+    <section class="section split">
+      <div class="panel quiet">
+        <h2>Documentation Standards</h2>
+        <p>Each reference is assigned a category, publication owner, update cadence, and retention note. Substantive revisions are published as new static snapshots rather than mutable documents.</p>
+      </div>
+      <div class="panel quiet">
+        <h2>Reader Guidance</h2>
+        <p>Operational documents are written for infrastructure teams, market analysts, and publication managers who need stable references without relying on interactive systems.</p>
+      </div>
+    </section>
+    <section class="section panel">
+      <h2>Frequently Used References</h2>
+      <div class="profile-grid">
+        <div><strong>Release Checklist</strong><span>Pre-publication controls for manifests, checksums, archive names, and retention windows.</span></div>
+        <div><strong>Regional Availability Note</strong><span>Guidance for interpreting latency, access continuity, and mirror status summaries.</span></div>
+        <div><strong>Archive Naming Policy</strong><span>Recommended structure for package names, document identifiers, and static resource paths.</span></div>
+        <div><strong>Publication Review Log</strong><span>A lightweight format for documenting release decisions and update approvals.</span></div>
+      </div>
     </section>""",
         },
         "downloads": {
-            "title": "Downloads",
-            "eyebrow": "Release catalog",
-            "intro": "Release packages are grouped by platform and channel for predictable automated retrieval. Checksum manifests are refreshed alongside every published archive.",
+            "eyebrow": "Publication archive",
+            "title": "Verified releases and research packages.",
+            "intro": "Downloadable packages are grouped by publication channel, checksum status, and retention policy for predictable retrieval.",
             "metric": "428",
-            "metric_label": "cached artifacts",
+            "metric_label": "verified artifacts",
             "cards": [
-                ("Stable", "Production Archive", "Recommended production artifacts with signed manifests."),
-                ("LTS", "Extended Support", "Compatibility archives for long-lived deployments."),
-                ("Verify", "Checksums", "SHA256 manifests for every downloadable package."),
+                ("Briefs", "Research Packages", "Quarterly and monthly infrastructure briefs with static supporting materials."),
+                ("Data", "Index Snapshots", "Versioned resource catalogs and structured archive bundles."),
+                ("Verify", "Manifest Files", "SHA256 manifests and release notes for every public package."),
             ],
             "extra": """
     <section class="section panel">
       <h2>Release Catalog</h2>
       <table class="content-table">
-        <tr><th>Package</th><th>Channel</th><th>Size</th><th>Checksum</th></tr>
-        <tr><td>resource-bundle-4.8.2.tar.gz</td><td>Stable</td><td>86 MB</td><td>SHA256</td></tr>
-        <tr><td>docs-snapshot-2026.05.zip</td><td>Current</td><td>24 MB</td><td>SHA256</td></tr>
-        <tr><td>asset-pack-2.14.0.avif.zip</td><td>Optimized</td><td>112 MB</td><td>SHA256</td></tr>
+        <tr><th>Package</th><th>Channel</th><th>Size</th><th>Verification</th></tr>
+        <tr><td>infrastructure-brief-2026-q2.pdf</td><td>Research</td><td>18 MB</td><td>SHA256</td></tr>
+        <tr><td>resource-index-2026.05.zip</td><td>Data</td><td>42 MB</td><td>SHA256</td></tr>
+        <tr><td>delivery-controls-handbook.zip</td><td>Operations</td><td>24 MB</td><td>SHA256</td></tr>
+        <tr><td>media-library-2026.05.tar.gz</td><td>Assets</td><td>96 MB</td><td>SHA256</td></tr>
       </table>
+    </section>
+    <section class="section split">
+      <div class="panel quiet">
+        <h2>Download Policy</h2>
+        <p>Published packages are retained under stable paths. Replacement packages receive new version identifiers and updated manifest records.</p>
+      </div>
+      <div class="panel quiet">
+        <h2>Verification Notes</h2>
+        <p>Checksum records are published with every archive so downstream teams can verify file integrity before use or redistribution.</p>
+      </div>
+    </section>
+    <section class="section panel">
+      <h2>Archive Channels</h2>
+      <div class="profile-grid">
+        <div><strong>Research</strong><span>Market notes, infrastructure briefs, and summary packs for monthly publication cycles.</span></div>
+        <div><strong>Operations</strong><span>Handbooks, checklists, and internal-facing resource continuity references.</span></div>
+        <div><strong>Data</strong><span>Static indexes, structured catalogs, and versioned manifest bundles.</span></div>
+        <div><strong>Media</strong><span>Charts, diagrams, and branded publication assets for reports and portals.</span></div>
+      </div>
     </section>""",
         },
         "assets": {
-            "title": "Image Resources",
-            "eyebrow": "Static asset library",
-            "intro": "Static image resources are optimized for documentation, release portals, and integration pages. Assets are versioned by path for stable cache behavior.",
-            "metric": "AVIF",
-            "metric_label": "preferred image format",
+            "eyebrow": "Media library",
+            "title": "Brand, chart, and research visuals.",
+            "intro": "Static visual resources support research pages, release portals, data presentations, and executive summaries.",
+            "metric": "3.2K",
+            "metric_label": "published visual assets",
             "cards": [
-                ("Screens", "Screenshots", "Compressed UI images for documentation pages."),
-                ("Systems", "Diagrams", "Versioned architecture and workflow diagrams."),
-                ("UI", "Icons", "Small static assets for release portals."),
+                ("Charts", "Market Graphics", "Static charts for infrastructure, data center, and resource delivery reports."),
+                ("Systems", "Architecture Diagrams", "Versioned diagrams for operational and documentation packages."),
+                ("Brand", "Publication Assets", "Presentation images, icons, and executive summary media."),
             ],
             "extra": """
     <section class="section panel">
       <h2>Asset Collections</h2>
       <div class="asset-grid">
-        <div><span class="thumb a"></span><strong>Portal Screens</strong><p>UI snapshots for documentation pages.</p></div>
-        <div><span class="thumb b"></span><strong>Architecture Diagrams</strong><p>Versioned network and resource flow diagrams.</p></div>
-        <div><span class="thumb c"></span><strong>Release Icons</strong><p>Static interface assets for release portals.</p></div>
+        <div><span class="thumb a"></span><strong>Research Charts</strong><p>Regional infrastructure and availability charts.</p></div>
+        <div><span class="thumb b"></span><strong>Network Diagrams</strong><p>Static diagrams for resource and delivery documentation.</p></div>
+        <div><span class="thumb c"></span><strong>Publication Media</strong><p>Images and icons for reports, portals, and release notes.</p></div>
+      </div>
+    </section>
+    <section class="section panel">
+      <h2>Media Usage Notes</h2>
+      <p>Visual assets are grouped by report family and publication period. Each package includes optimized web images, fallback formats, and simple usage notes for internal documentation and public portals.</p>
+      <div class="profile-grid">
+        <div><strong>Chart Sets</strong><span>Prepared graphics for infrastructure briefs and data availability summaries.</span></div>
+        <div><strong>Diagram Packs</strong><span>Operational diagrams for delivery architecture, resource flow, and publication lifecycle notes.</span></div>
+        <div><strong>Presentation Media</strong><span>Executive summary graphics and static images for recurring business reviews.</span></div>
+        <div><strong>Icon Library</strong><span>Small interface and document icons for release catalogs and web references.</span></div>
       </div>
     </section>""",
         },
@@ -256,79 +342,103 @@ def render_site_html(site: Row, section: str = "home", preview: bool = False) ->
   <style>
     :root {{
       color-scheme: light;
-      --ink: #14212f;
-      --muted: #526173;
-      --line: #d7e0ea;
+      --ink: #13202d;
+      --muted: #617081;
+      --line: #d8e0e9;
       --panel: #ffffff;
-      --wash: #f4f7fb;
-      --accent: #0f6bb7;
-      --accent-2: #13836f;
+      --wash: #f2f5f8;
+      --deep: #0f2436;
+      --accent: #1c6b72;
+      --accent-2: #b48a3c;
       --ok: #157347;
     }}
     * {{ box-sizing: border-box; }}
     body {{
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: Georgia, "Times New Roman", serif;
       color: var(--ink);
       background: var(--wash);
       line-height: 1.55;
     }}
+    a {{ color: inherit; }}
     header {{
-      background: #ffffff;
+      background: rgba(255,255,255,.96);
       border-bottom: 1px solid var(--line);
       position: sticky;
       top: 0;
       z-index: 5;
+      backdrop-filter: blur(8px);
     }}
     .wrap {{ width: min(1120px, calc(100% - 32px)); margin: 0 auto; }}
     .nav {{ display: flex; align-items: center; justify-content: space-between; min-height: 64px; gap: 20px; }}
-    .brand {{ font-weight: 700; font-size: 18px; display: flex; gap: 10px; align-items: center; }}
-    .brand-mark {{ width: 28px; height: 28px; border-radius: 7px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); display: inline-block; }}
-    nav a {{ color: var(--muted); text-decoration: none; margin-left: 18px; font-size: 14px; padding: 8px 0; border-bottom: 2px solid transparent; }}
+    .brand {{ font-weight: 700; font-size: 18px; display: flex; gap: 10px; align-items: center; letter-spacing: .03em; }}
+    .brand-mark {{ width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff, var(--accent-2) 18%, var(--deep) 70%); display: inline-block; }}
+    nav a {{ color: var(--muted); text-decoration: none; margin-left: 20px; font-size: 13px; padding: 8px 0; border-bottom: 2px solid transparent; text-transform: uppercase; letter-spacing: .08em; }}
     nav a.active {{ color: var(--ink); border-bottom-color: var(--accent); }}
-    main {{ padding: 42px 0; }}
-    .hero {{ display: grid; grid-template-columns: 1.2fr .8fr; gap: 28px; align-items: stretch; }}
-    h1 {{ font-size: clamp(32px, 5vw, 56px); line-height: 1.05; margin: 0 0 16px; letter-spacing: 0; }}
-    h2 {{ margin: 0 0 14px; font-size: 22px; }}
+    main {{ padding: 0 0 48px; }}
+    .hero-band {{ background: var(--deep); color: #fff; padding: 70px 0 34px; }}
+    .hero {{ display: grid; grid-template-columns: 1.18fr .82fr; gap: 36px; align-items: stretch; }}
+    h1 {{ font-size: clamp(38px, 5vw, 68px); line-height: .98; margin: 0 0 18px; letter-spacing: 0; font-weight: 500; }}
+    h2 {{ margin: 0 0 14px; font-size: 26px; font-weight: 500; }}
     p {{ margin: 0 0 16px; color: var(--muted); }}
-    .lede {{ font-size: 18px; color: #344457; }}
+    .hero p, .hero .lede {{ color: #d5dee7; }}
+    .lede {{ font-size: 19px; color: #344457; }}
     .panel {{
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 22px;
+      border-radius: 2px;
+      padding: 24px;
+      box-shadow: 0 18px 50px rgba(15, 36, 54, .08);
     }}
-    .top-strip {{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }}
-    .top-strip div {{ border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 14px; }}
-    .top-strip strong {{ display: block; font-size: 20px; }}
-    .top-strip span {{ color: var(--muted); font-size: 13px; }}
-    .grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }}
-    .metric {{ font-size: 30px; font-weight: 700; color: var(--accent); }}
-    .panel-label, .kicker {{ color: var(--accent-2); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }}
-    .feature strong {{ display: block; margin: 8px 0; font-size: 18px; }}
+    .hero-card {{ background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); box-shadow: none; }}
+    .hero-card p {{ color: #d5dee7; }}
+    .top-strip {{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--line); background: #fff; margin: -1px auto 34px; }}
+    .top-strip div {{ border-right: 1px solid var(--line); padding: 18px; }}
+    .top-strip div:last-child {{ border-right: 0; }}
+    .top-strip strong {{ display: block; font-size: 24px; color: var(--deep); }}
+    .top-strip span {{ color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .06em; }}
+    .grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }}
+    .metric {{ font-size: 36px; font-weight: 500; color: var(--accent-2); }}
+    .panel-label, .kicker {{ color: var(--accent-2); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; }}
+    .feature strong {{ display: block; margin: 8px 0; font-size: 20px; font-weight: 500; }}
     .list {{ margin: 0; padding-left: 20px; color: var(--muted); }}
     .list.compact li {{ margin-bottom: 6px; }}
-    .section {{ margin-top: 28px; }}
-    .split {{ display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }}
+    .section {{ margin-top: 34px; }}
+    .split {{ display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }}
+    .editorial {{ display: grid; grid-template-columns: .9fr 1.1fr; gap: 34px; background: #fff; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 36px 0; }}
+    .insight-list {{ display: grid; gap: 12px; }}
+    .insight-list article {{ border-left: 3px solid var(--accent-2); background: #f8fafc; padding: 14px 16px; }}
+    .insight-list strong {{ display: block; margin-bottom: 4px; font-weight: 500; }}
+    .insight-list span {{ color: var(--muted); }}
+    .profile-grid {{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 18px; }}
+    .profile-grid div {{ border: 1px solid var(--line); background: #f8fafc; padding: 16px; }}
+    .profile-grid strong {{ display: block; margin-bottom: 8px; font-weight: 500; }}
+    .profile-grid span {{ color: var(--muted); }}
+    .news-grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 18px; }}
+    .news-grid article {{ border-top: 3px solid var(--accent-2); background: #f8fafc; padding: 18px; }}
+    .news-grid strong {{ display: block; font-size: 18px; font-weight: 500; margin-bottom: 10px; }}
+    .news-grid span {{ color: var(--accent); font-size: 13px; text-transform: uppercase; letter-spacing: .08em; }}
+    .contact-band {{ display: grid; grid-template-columns: 1.2fr .8fr; gap: 24px; background: var(--deep); color: #fff; padding: 34px; }}
+    .contact-band p {{ color: #d5dee7; }}
     .hero-actions {{ display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }}
-    .primary-link, .secondary-link {{ min-height: 42px; display: inline-flex; align-items: center; padding: 9px 14px; border-radius: 6px; text-decoration: none; font-weight: 700; }}
-    .primary-link {{ background: var(--accent); color: #fff; }}
-    .secondary-link {{ border: 1px solid var(--line); color: var(--ink); background: #fff; }}
+    .primary-link, .secondary-link {{ min-height: 44px; display: inline-flex; align-items: center; padding: 10px 16px; border-radius: 2px; text-decoration: none; font-weight: 700; font-family: Arial, Helvetica, sans-serif; }}
+    .primary-link {{ background: var(--accent-2); color: #13202d; }}
+    .secondary-link {{ border: 1px solid rgba(255,255,255,.42); color: #fff; background: transparent; }}
     .mini-grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }}
-    .mini-grid span {{ border: 1px solid var(--line); border-radius: 6px; padding: 9px; color: var(--muted); background: #f9fbfd; }}
-    .mini-grid strong {{ color: var(--ok); float: right; }}
+    .mini-grid span {{ border: 1px solid rgba(255,255,255,.18); padding: 10px; color: #d5dee7; background: rgba(255,255,255,.06); }}
+    .mini-grid strong {{ color: #fff; float: right; }}
     .release-row {{ display: grid; grid-template-columns: 1fr auto auto; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }}
     .release-row:last-child {{ border-bottom: 0; }}
     .release-row em {{ color: var(--accent-2); font-style: normal; }}
-    .search-box {{ border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 13px 14px; color: var(--muted); margin-bottom: 14px; }}
+    .search-box {{ border: 1px solid var(--line); background: #fff; border-radius: 2px; padding: 13px 14px; color: var(--muted); margin-bottom: 14px; }}
     .content-table {{ width: 100%; border-collapse: collapse; margin-top: 8px; }}
     .content-table th, .content-table td {{ text-align: left; border-bottom: 1px solid var(--line); padding: 12px 10px; }}
     .content-table th {{ color: var(--muted); font-size: 13px; }}
     .asset-grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }}
-    .asset-grid div {{ border: 1px solid var(--line); border-radius: 8px; padding: 14px; }}
-    .thumb {{ display: block; min-height: 92px; margin-bottom: 12px; border-radius: 8px; background: linear-gradient(135deg, #dce9f6, #d8f0ea); border: 1px solid var(--line); }}
-    .thumb.b {{ background: linear-gradient(135deg, #e8edf5, #d9e6fa); }}
-    .thumb.c {{ background: linear-gradient(135deg, #e6f2ec, #eaf0f8); }}
+    .asset-grid div {{ border: 1px solid var(--line); border-radius: 2px; padding: 14px; }}
+    .thumb {{ display: block; min-height: 110px; margin-bottom: 12px; border-radius: 2px; background: linear-gradient(135deg, #d9e1e8, #f4efe5); border: 1px solid var(--line); }}
+    .thumb.b {{ background: linear-gradient(135deg, #e2e7ed, #cfd8df); }}
+    .thumb.c {{ background: linear-gradient(135deg, #efe7d8, #d9e4e4); }}
     code {{ background: #edf2f7; padding: 2px 6px; border-radius: 4px; }}
     footer {{ border-top: 1px solid var(--line); padding: 22px 0; color: var(--muted); font-size: 13px; }}
     .preview-back {{
@@ -347,9 +457,11 @@ def render_site_html(site: Row, section: str = "home", preview: bool = False) ->
       box-shadow: 0 8px 20px rgba(23, 32, 42, .18);
     }}
     @media (max-width: 820px) {{
-      .hero, .grid, .split, .top-strip, .asset-grid {{ grid-template-columns: 1fr; }}
+      .hero, .grid, .split, .top-strip, .asset-grid, .editorial, .profile-grid, .news-grid, .contact-band {{ grid-template-columns: 1fr; }}
+      .hero-band {{ padding: 42px 0 26px; }}
       .nav {{ align-items: flex-start; flex-direction: column; padding: 14px 0; }}
       nav a {{ margin: 0 14px 0 0; }}
+      .top-strip div {{ border-right: 0; border-bottom: 1px solid var(--line); }}
     }}
   </style>
 </head>
@@ -365,34 +477,36 @@ def render_site_html(site: Row, section: str = "home", preview: bool = False) ->
       </nav>
     </div>
   </header>
+  <section class="hero-band">
+    <div class="wrap hero">
+        <div>
+          <span class="panel-label">{page["eyebrow"]}</span>
+          <h1>{page["title"]}</h1>
+          <p class="lede">{page["intro"]}</p>
+          <div class="hero-actions">
+            <a class="primary-link" href="{nav_downloads}">View publications</a>
+            <a class="secondary-link" href="{nav_docs}">Research library</a>
+          </div>
+        </div>
+        <div class="panel hero-card">
+          <div class="panel-label">Firm indicator</div>
+          <div class="metric">{page["metric"]}</div>
+          <p>{page["metric_label"]}</p>
+          <div class="mini-grid">
+            <span>Americas <strong>active</strong></span>
+            <span>Europe <strong>active</strong></span>
+            <span>Asia-Pacific <strong>active</strong></span>
+            <span>Research <strong>current</strong></span>
+          </div>
+        </div>
+    </div>
+  </section>
   <main class="wrap">
     <section class="top-strip">
-      <div><strong>18</strong><span>regional mirrors</span></div>
+      <div><strong>18</strong><span>covered regions</span></div>
       <div><strong>428</strong><span>published artifacts</span></div>
-      <div><strong>24h</strong><span>manifest refresh</span></div>
+      <div><strong>24h</strong><span>operations review</span></div>
       <div><strong>TLS</strong><span>secure delivery</span></div>
-    </section>
-    <section class="hero">
-      <div>
-        <span class="panel-label">{page["eyebrow"]}</span>
-        <h1>{page["title"]}</h1>
-        <p class="lede">{page["intro"]}</p>
-        <div class="hero-actions">
-          <a class="primary-link" href="{nav_downloads}">View releases</a>
-          <a class="secondary-link" href="{nav_docs}">Read documentation</a>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="panel-label">Service indicator</div>
-        <div class="metric">{page["metric"]}</div>
-        <p>{page["metric_label"]}</p>
-        <div class="mini-grid">
-          <span>HK mirror <strong>online</strong></span>
-          <span>JP mirror <strong>online</strong></span>
-          <span>US mirror <strong>online</strong></span>
-          <span>EU mirror <strong>online</strong></span>
-        </div>
-      </div>
     </section>
     <section class="grid section">
 {cards}

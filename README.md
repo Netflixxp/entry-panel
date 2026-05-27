@@ -29,6 +29,14 @@ python -m venv .venv
 
 ## Docker Compose
 
+一键安装：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Netflixxp/entry-panel/main/install.sh | bash
+```
+
+手动启动：
+
 ```bash
 cp .env.example .env
 mkdir -p data ssh

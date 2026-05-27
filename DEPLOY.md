@@ -1,5 +1,39 @@
 # Docker Compose 部署
 
+## 一键安装
+
+Debian/Ubuntu VPS 上执行：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Netflixxp/entry-panel/main/install.sh | bash
+```
+
+自定义端口：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Netflixxp/entry-panel/main/install.sh | PANEL_PORT=8080 bash
+```
+
+自定义安装目录：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Netflixxp/entry-panel/main/install.sh | INSTALL_DIR=/opt/anytls-entry-panel bash
+```
+
+安装完成后访问：
+
+```text
+http://服务器IP:8000
+```
+
+默认账号：
+
+```text
+admin / admin123
+```
+
+首次登录后请立即修改密码。
+
 ## 1. 安装 Docker
 
 Debian/Ubuntu 上先安装 Docker 和 Compose 插件：

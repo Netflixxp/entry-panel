@@ -6,9 +6,10 @@ import tempfile
 import zipfile
 from pathlib import Path
 from typing import Annotated
+from urllib.parse import urlencode
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
-from fastapi.responses import HTMLResponse, RedirectResponse, Response, StreamingResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse, RedirectResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
@@ -75,6 +76,83 @@ def save_rule_check(rule_id: int, result: dict[str, object]) -> None:
             rule_id,
         ),
     )
+
+
+def _csv_cell(value: str) -> str:
+    escaped = value.replace('"', '""')
+    return f'"{escaped}"'
+
+
+def _parse_rule_import(text: str) -> list[dict[str, str]]:
+    items: list[dict[str, str]] = []
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.lower().startswith("node_name,") or line.lower().startswith("sni_domain,"):
+            continue
+        parts = _split_import_line(line)
+        if len(parts) >= 6:
+            node_name, sni_domain, target_host, target_port, enabled, remark = parts[:6]
+        elif len(parts) >= 4:
+            node_name = ""
+            sni_domain, target_host, target_port, remark = parts[:4]
+            enabled = "1"
+        elif len(parts) >= 3:
+            node_name = ""
+            sni_domain, target_host, target_port = parts[:3]
+            enabled = "1"
+            remark = ""
+        else:
+            continue
+        items.append(
+            {
+                "node_name": node_name.strip(),
+                "sni_domain": sni_domain.strip(),
+                "target_host": target_host.strip(),
+                "target_port": (target_port or "443").strip(),
+                "enabled": "1" if str(enabled).strip().lower() not in {"0", "false", "off", "disabled"} else "0",
+                "remark": remark.strip(),
+            }
+        )
+    return [item for item in items if item["sni_domain"] and item["target_host"]]
+
+
+def _split_import_line(line: str) -> list[str]:
+    if "," in line:
+        return _split_csv_line(line)
+    return [part.strip() for part in line.replace("|", " ").split()]
+
+
+def _split_csv_line(line: str) -> list[str]:
+    values: list[str] = []
+    current: list[str] = []
+    in_quotes = False
+    index = 0
+    while index < len(line):
+        char = line[index]
+        if char == '"':
+            if in_quotes and index + 1 < len(line) and line[index + 1] == '"':
+                current.append('"')
+                index += 1
+            else:
+                in_quotes = not in_quotes
+        elif char == "," and not in_quotes:
+            values.append("".join(current).strip())
+            current = []
+        else:
+            current.append(char)
+        index += 1
+    values.append("".join(current).strip())
+    return values
+
+
+def _resolve_import_node_id(node_name: str | None, fallback_node_id: int) -> int:
+    if node_name:
+        node = fetch_one("SELECT id FROM entry_nodes WHERE name = ? OR host = ?", (node_name, node_name))
+        if node:
+            return int(node["id"])
+    return fallback_node_id
 
 
 def apply_config_to_node(node_id: int) -> bool:
@@ -271,13 +349,28 @@ def apply_entry_node(node_id: int, _: Annotated[str, Depends(current_admin)]) ->
 
 @app.get("/sni-rules", response_class=HTMLResponse)
 def sni_rules(request: Request, _: Annotated[str, Depends(current_admin)]) -> HTMLResponse:
-    rules = fetch_all(
+    keyword = request.query_params.get("q", "").strip()
+    params: list[object] = []
+    where = ""
+    if keyword:
+        like = f"%{keyword}%"
+        where = """
+        WHERE sni_rules.sni_domain LIKE ?
+           OR sni_rules.target_host LIKE ?
+           OR sni_rules.remark LIKE ?
+           OR entry_nodes.name LIKE ?
+           OR entry_nodes.host LIKE ?
         """
+        params = [like, like, like, like, like]
+    rules = fetch_all(
+        f"""
         SELECT sni_rules.*, entry_nodes.name AS node_name, entry_nodes.host AS node_host
         FROM sni_rules
         LEFT JOIN entry_nodes ON entry_nodes.id = sni_rules.node_id
+        {where}
         ORDER BY entry_nodes.name, sni_rules.sni_domain
-        """
+        """,
+        tuple(params),
     )
     nodes = fetch_all("SELECT * FROM entry_nodes ORDER BY name")
     check_rule_id = request.query_params.get("check_rule_id")
@@ -292,8 +385,12 @@ def sni_rules(request: Request, _: Annotated[str, Depends(current_admin)]) -> HT
     ) if check_rule_id else None
     return templates.TemplateResponse(
         "sni_rules.html",
-        {"request": request, "rules": rules, "nodes": nodes, "check_result": check_result},
+        {"request": request, "rules": rules, "nodes": nodes, "check_result": check_result, "keyword": keyword},
     )
+
+
+def _sni_rules_redirect(q: str = "") -> RedirectResponse:
+    return redirect("/sni-rules" + (f"?{urlencode({'q': q})}" if q else ""))
 
 
 @app.post("/sni-rules")
@@ -312,7 +409,113 @@ def create_sni_rule(
     )
     audit("rule.create", f"Created SNI rule {sni_domain} -> {target_host}:{target_port}")
     auto_sync_rule_node(rule_id, f"Auto synced after creating SNI rule {sni_domain}")
-    return redirect("/sni-rules")
+    return _sni_rules_redirect()
+
+
+@app.get("/sni-rules/export")
+def export_sni_rules(_: Annotated[str, Depends(current_admin)], q: str = "") -> PlainTextResponse:
+    keyword = q.strip()
+    params: list[object] = []
+    where = ""
+    if keyword:
+        like = f"%{keyword}%"
+        where = """
+        WHERE sni_rules.sni_domain LIKE ?
+           OR sni_rules.target_host LIKE ?
+           OR sni_rules.remark LIKE ?
+           OR entry_nodes.name LIKE ?
+           OR entry_nodes.host LIKE ?
+        """
+        params = [like, like, like, like, like]
+    rules = fetch_all(
+        f"""
+        SELECT sni_rules.*, entry_nodes.name AS node_name
+        FROM sni_rules
+        LEFT JOIN entry_nodes ON entry_nodes.id = sni_rules.node_id
+        {where}
+        ORDER BY entry_nodes.name, sni_rules.sni_domain
+        """,
+        tuple(params),
+    )
+    lines = ["node_name,sni_domain,target_host,target_port,enabled,remark"]
+    for rule in rules:
+        values = [
+            rule["node_name"] or "",
+            rule["sni_domain"],
+            rule["target_host"],
+            str(rule["target_port"]),
+            "1" if rule["enabled"] else "0",
+            rule["remark"] or "",
+        ]
+        lines.append(",".join(_csv_cell(value) for value in values))
+    return PlainTextResponse(
+        "\n".join(lines) + "\n",
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=sni-rules.csv"},
+    )
+
+
+@app.post("/sni-rules/import")
+async def import_sni_rules(
+    _: Annotated[str, Depends(current_admin)],
+    node_id: int = Form(...),
+    rules_text: str = Form(""),
+    file: UploadFile | None = File(None),
+) -> RedirectResponse:
+    text = rules_text.strip()
+    if file and file.filename:
+        text = (await file.read()).decode("utf-8-sig", errors="replace")
+    imported = 0
+    touched_nodes = {node_id}
+    for item in _parse_rule_import(text):
+        row_node_id = _resolve_import_node_id(item.get("node_name"), node_id)
+        touched_nodes.add(row_node_id)
+        execute(
+            """
+            INSERT INTO sni_rules (node_id, sni_domain, target_host, target_port, enabled, remark)
+            VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT(sni_domain) DO UPDATE SET
+                node_id = excluded.node_id,
+                target_host = excluded.target_host,
+                target_port = excluded.target_port,
+                enabled = excluded.enabled,
+                remark = excluded.remark
+            """,
+            (
+                row_node_id,
+                item["sni_domain"],
+                item["target_host"],
+                int(item.get("target_port") or 443),
+                int(item.get("enabled") if item.get("enabled") is not None else 1),
+                item.get("remark") or None,
+            ),
+        )
+        imported += 1
+    for touched_node_id in touched_nodes:
+        apply_config_to_node(int(touched_node_id))
+    audit("rule.import", f"Imported {imported} SNI rules")
+    return _sni_rules_redirect()
+
+
+@app.post("/sni-rules/bulk-switch-node")
+def bulk_switch_sni_rule_node(
+    _: Annotated[str, Depends(current_admin)],
+    from_node_id: int = Form(...),
+    to_node_id: int = Form(...),
+    q: str = Form(""),
+) -> RedirectResponse:
+    keyword = q.strip()
+    params: list[object] = [to_node_id, from_node_id]
+    where = "node_id = ?"
+    if keyword:
+        like = f"%{keyword}%"
+        where += " AND (sni_domain LIKE ? OR target_host LIKE ? OR remark LIKE ?)"
+        params.extend([like, like, like])
+    execute(f"UPDATE sni_rules SET node_id = ? WHERE {where}", tuple(params))
+    apply_config_to_node(from_node_id)
+    apply_config_to_node(to_node_id)
+    audit("rule.bulk_switch_node", f"Moved rules from node {from_node_id} to {to_node_id}")
+    return _sni_rules_redirect(keyword)
 
 
 @app.post("/sni-rules/{rule_id}/update")

@@ -413,11 +413,16 @@ def create_sni_rule(
 
 
 @app.get("/sni-rules/export")
-def export_sni_rules(_: Annotated[str, Depends(current_admin)], q: str = "") -> PlainTextResponse:
+def export_sni_rules(_: Annotated[str, Depends(current_admin)], q: str = "", ids: str = "") -> PlainTextResponse:
     keyword = q.strip()
     params: list[object] = []
     where = ""
-    if keyword:
+    selected_ids = _parse_id_list(ids)
+    if selected_ids:
+        placeholders = ",".join("?" for _ in selected_ids)
+        where = f"WHERE sni_rules.id IN ({placeholders})"
+        params = selected_ids
+    elif keyword:
         like = f"%{keyword}%"
         where = """
         WHERE sni_rules.sni_domain LIKE ?
@@ -503,8 +508,21 @@ def bulk_switch_sni_rule_node(
     from_node_id: int = Form(...),
     to_node_id: int = Form(...),
     q: str = Form(""),
+    selected_rule_ids: str = Form(""),
 ) -> RedirectResponse:
     keyword = q.strip()
+    selected_ids = _parse_id_list(selected_rule_ids)
+    if selected_ids:
+        placeholders = ",".join("?" for _ in selected_ids)
+        old_nodes = fetch_all(f"SELECT DISTINCT node_id FROM sni_rules WHERE id IN ({placeholders})", tuple(selected_ids))
+        execute(f"UPDATE sni_rules SET node_id = ? WHERE id IN ({placeholders})", tuple([to_node_id, *selected_ids]))
+        for old_node in old_nodes:
+            if old_node["node_id"]:
+                apply_config_to_node(int(old_node["node_id"]))
+        apply_config_to_node(to_node_id)
+        audit("rule.bulk_switch_node", f"Moved selected rules to node {to_node_id}: {selected_ids}")
+        return _sni_rules_redirect(keyword)
+
     params: list[object] = [to_node_id, from_node_id]
     where = "node_id = ?"
     if keyword:
@@ -516,6 +534,15 @@ def bulk_switch_sni_rule_node(
     apply_config_to_node(to_node_id)
     audit("rule.bulk_switch_node", f"Moved rules from node {from_node_id} to {to_node_id}")
     return _sni_rules_redirect(keyword)
+
+
+def _parse_id_list(value: str) -> list[int]:
+    ids: list[int] = []
+    for item in value.split(","):
+        item = item.strip()
+        if item.isdigit():
+            ids.append(int(item))
+    return ids
 
 
 @app.post("/sni-rules/{rule_id}/update")

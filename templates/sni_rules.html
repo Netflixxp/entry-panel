@@ -4,12 +4,12 @@
 <div class="topline">
   <div>
     <h1>SNI 规则</h1>
-    <div class="muted">每条规则绑定一台入口机；新增、修改、删除、启停后只自动同步对应入口机。</div>
+    <div class="muted">每条规则绑定一台入口机；可勾选规则后批量导出或批量切换入口。</div>
   </div>
   <div class="actions">
     <button class="primary" type="button" onclick="openModal('add-rule-modal')">添加规则</button>
     <button type="button" onclick="openModal('import-rules-modal')">批量导入</button>
-    <a class="button" href="/sni-rules/export{% if keyword %}?q={{ keyword }}{% endif %}">批量导出</a>
+    <button type="button" onclick="exportSelectedRules()">批量导出</button>
     <button type="button" onclick="openModal('bulk-switch-modal')">批量切换入口</button>
   </div>
 </div>
@@ -29,6 +29,7 @@
   <table>
     <thead>
       <tr>
+        <th><input style="width:auto;min-height:auto" type="checkbox" onclick="toggleAllRules(this)"></th>
         <th>规则名</th>
         <th>入口</th>
         <th>出口</th>
@@ -42,6 +43,7 @@
       {% for rule in rules %}
       {% set used_bytes = (rule.traffic_bytes or 0) - (rule.traffic_offset_bytes or 0) %}
       <tr>
+        <td data-label="选择"><input style="width:auto;min-height:auto" class="rule-check" type="checkbox" value="{{ rule.id }}"></td>
         <td data-label="规则名">
           <strong>{{ rule.remark or rule.sni_domain }}</strong>
           <div class="muted">{{ rule.sni_domain }}</div>
@@ -50,9 +52,7 @@
           {{ rule.node_name or "未绑定入口机" }}
           <div class="muted">{{ rule.node_host or "-" }}</div>
         </td>
-        <td data-label="出口">
-          {{ rule.target_host }}:{{ rule.target_port }}
-        </td>
+        <td data-label="出口">{{ rule.target_host }}:{{ rule.target_port }}</td>
         <td data-label="连通性">
           {% if rule.last_check_at %}
             {% if rule.last_check_ok %}
@@ -71,32 +71,20 @@
         <td data-label="已用流量">
           <strong>{{ used_bytes|format_bytes }}</strong>
           <div class="actions" style="margin-top:8px">
-            <form method="post" action="/sni-rules/{{ rule.id }}/traffic">
-              <button type="submit">刷新</button>
-            </form>
-            <form method="post" action="/sni-rules/{{ rule.id }}/traffic/clear" onsubmit="return confirm('清空这条规则的流量统计？')">
-              <button type="submit">清空</button>
-            </form>
+            <form method="post" action="/sni-rules/{{ rule.id }}/traffic"><button type="submit">刷新</button></form>
+            <form method="post" action="/sni-rules/{{ rule.id }}/traffic/clear" onsubmit="return confirm('清空这条规则的流量统计？')"><button type="submit">清空</button></form>
           </div>
         </td>
-        <td data-label="状态">
-          <span class="badge {% if rule.enabled %}ok{% else %}warn{% endif %}">{{ "正常" if rule.enabled else "停用" }}</span>
-        </td>
+        <td data-label="状态"><span class="badge {% if rule.enabled %}ok{% else %}warn{% endif %}">{{ "正常" if rule.enabled else "停用" }}</span></td>
         <td class="actions" data-label="操作">
-          <form method="post" action="/sni-rules/{{ rule.id }}/check">
-            <button type="submit" title="检测入口机到落地机">检测</button>
-          </form>
+          <form method="post" action="/sni-rules/{{ rule.id }}/check"><button type="submit">检测</button></form>
           <button type="button" onclick="openModal('edit-rule-{{ rule.id }}')">编辑</button>
-          <form method="post" action="/sni-rules/{{ rule.id }}/toggle">
-            <button type="submit">{{ "停用" if rule.enabled else "启用" }}</button>
-          </form>
-          <form method="post" action="/sni-rules/{{ rule.id }}/delete" onsubmit="return confirm('删除这条 SNI 规则并同步到对应入口机？')">
-            <button class="danger" type="submit">删除</button>
-          </form>
+          <form method="post" action="/sni-rules/{{ rule.id }}/toggle"><button type="submit">{{ "停用" if rule.enabled else "启用" }}</button></form>
+          <form method="post" action="/sni-rules/{{ rule.id }}/delete" onsubmit="return confirm('删除这条 SNI 规则并同步到对应入口机？')"><button class="danger" type="submit">删除</button></form>
         </td>
       </tr>
       {% else %}
-      <tr><td colspan="7" data-label="提示" class="muted">还没有 SNI 规则。</td></tr>
+      <tr><td colspan="8" data-label="提示" class="muted">还没有 SNI 规则。</td></tr>
       {% endfor %}
     </tbody>
   </table>
@@ -107,6 +95,7 @@
   {% set used_bytes = (rule.traffic_bytes or 0) - (rule.traffic_offset_bytes or 0) %}
   <details class="mobile-card rule-accordion">
     <summary>
+      <input style="width:auto;min-height:auto" class="rule-check" type="checkbox" value="{{ rule.id }}" onclick="event.stopPropagation()">
       <div>
         <strong>{{ rule.remark or rule.sni_domain }}</strong>
         <div class="muted">{{ rule.sni_domain }}</div>
@@ -121,14 +110,8 @@
         <span class="badge {% if rule.enabled %}ok{% else %}warn{% endif %}">{{ "正常" if rule.enabled else "停用" }}</span>
       </div>
     </summary>
-    <div class="mobile-field">
-      <span>入口</span>
-      <div>{{ rule.node_name or "未绑定入口机" }}<div class="muted">{{ rule.node_host or "-" }}</div></div>
-    </div>
-    <div class="mobile-field">
-      <span>出口</span>
-      <div>{{ rule.target_host }}:{{ rule.target_port }}</div>
-    </div>
+    <div class="mobile-field"><span>入口</span><div>{{ rule.node_name or "未绑定入口机" }}<div class="muted">{{ rule.node_host or "-" }}</div></div></div>
+    <div class="mobile-field"><span>出口</span><div>{{ rule.target_host }}:{{ rule.target_port }}</div></div>
     <div class="mobile-field">
       <span>连通性</span>
       <div>
@@ -147,27 +130,14 @@
         {% endif %}
       </div>
     </div>
-    <div class="mobile-field">
-      <span>已用流量</span>
-      <strong>{{ used_bytes|format_bytes }}</strong>
-    </div>
+    <div class="mobile-field"><span>已用流量</span><strong>{{ used_bytes|format_bytes }}</strong></div>
     <div class="actions">
-      <form method="post" action="/sni-rules/{{ rule.id }}/check">
-        <button type="submit">检测</button>
-      </form>
+      <form method="post" action="/sni-rules/{{ rule.id }}/check"><button type="submit">检测</button></form>
       <button type="button" onclick="openModal('edit-rule-{{ rule.id }}')">编辑</button>
-      <form method="post" action="/sni-rules/{{ rule.id }}/traffic">
-        <button type="submit">刷新流量</button>
-      </form>
-      <form method="post" action="/sni-rules/{{ rule.id }}/traffic/clear" onsubmit="return confirm('清空这条规则的流量统计？')">
-        <button type="submit">清空流量</button>
-      </form>
-      <form method="post" action="/sni-rules/{{ rule.id }}/toggle">
-        <button type="submit">{{ "停用" if rule.enabled else "启用" }}</button>
-      </form>
-      <form method="post" action="/sni-rules/{{ rule.id }}/delete" onsubmit="return confirm('删除这条 SNI 规则并同步到对应入口机？')">
-        <button class="danger" type="submit">删除</button>
-      </form>
+      <form method="post" action="/sni-rules/{{ rule.id }}/traffic"><button type="submit">刷新流量</button></form>
+      <form method="post" action="/sni-rules/{{ rule.id }}/traffic/clear" onsubmit="return confirm('清空这条规则的流量统计？')"><button type="submit">清空流量</button></form>
+      <form method="post" action="/sni-rules/{{ rule.id }}/toggle"><button type="submit">{{ "停用" if rule.enabled else "启用" }}</button></form>
+      <form method="post" action="/sni-rules/{{ rule.id }}/delete" onsubmit="return confirm('删除这条 SNI 规则并同步到对应入口机？')"><button class="danger" type="submit">删除</button></form>
     </div>
   </details>
   {% else %}
@@ -177,10 +147,7 @@
 
 <div class="modal" id="add-rule-modal" aria-hidden="true">
   <div class="modal-panel">
-    <div class="topline">
-      <h2>添加规则</h2>
-      <button type="button" onclick="closeModal('add-rule-modal')">关闭</button>
-    </div>
+    <div class="topline"><h2>添加规则</h2><button type="button" onclick="closeModal('add-rule-modal')">关闭</button></div>
     <form class="form-grid" method="post" action="/sni-rules">
       {% include "partials/rule_form_fields.html" %}
       <div class="full actions">
@@ -194,25 +161,17 @@
 <div class="modal" id="import-rules-modal" aria-hidden="true">
   <div class="modal-panel">
     <div class="topline">
-      <div>
-        <h2>批量导入规则</h2>
-        <div class="muted">支持 CSV 或文本：SNI,落地地址,端口,备注；也兼容导出的 CSV。</div>
-      </div>
+      <div><h2>批量导入规则</h2><div class="muted">支持 CSV 或文本：SNI,落地地址,端口,备注；也兼容导出的 CSV。</div></div>
       <button type="button" onclick="closeModal('import-rules-modal')">关闭</button>
     </div>
     <form class="form-grid" method="post" action="/sni-rules/import" enctype="multipart/form-data">
       <div>
         <label for="import_node_id">默认入口机</label>
         <select id="import_node_id" name="node_id" required>
-          {% for node in nodes %}
-          <option value="{{ node.id }}">{{ node.name }} - {{ node.host }}</option>
-          {% endfor %}
+          {% for node in nodes %}<option value="{{ node.id }}">{{ node.name }} - {{ node.host }}</option>{% endfor %}
         </select>
       </div>
-      <div>
-        <label for="file">CSV 文件</label>
-        <input id="file" type="file" name="file" accept=".csv,.txt">
-      </div>
+      <div><label for="file">CSV 文件</label><input id="file" type="file" name="file" accept=".csv,.txt"></div>
       <div class="full">
         <label for="rules_text">粘贴规则</label>
         <textarea id="rules_text" name="rules_text" placeholder="edge-hk1.example.com,2.2.2.2,443,香港&#10;edge-jp1.example.com,3.3.3.3,443,日本"></textarea>
@@ -228,28 +187,22 @@
 <div class="modal" id="bulk-switch-modal" aria-hidden="true">
   <div class="modal-panel">
     <div class="topline">
-      <div>
-        <h2>批量切换入口机</h2>
-        <div class="muted">会把来源入口机下的规则切换到目标入口机；如果当前有搜索关键词，只切换搜索结果范围内的规则。</div>
-      </div>
+      <div><h2>批量切换入口机</h2><div class="muted">优先切换已勾选规则；未勾选时按来源入口机和当前搜索范围切换。</div></div>
       <button type="button" onclick="closeModal('bulk-switch-modal')">关闭</button>
     </div>
     <form class="form-grid" method="post" action="/sni-rules/bulk-switch-node">
       <input type="hidden" name="q" value="{{ keyword }}">
+      <input type="hidden" id="selected_rule_ids" name="selected_rule_ids" value="">
       <div>
         <label for="from_node_id">来源入口机</label>
         <select id="from_node_id" name="from_node_id" required>
-          {% for node in nodes %}
-          <option value="{{ node.id }}">{{ node.name }} - {{ node.host }}</option>
-          {% endfor %}
+          {% for node in nodes %}<option value="{{ node.id }}">{{ node.name }} - {{ node.host }}</option>{% endfor %}
         </select>
       </div>
       <div>
         <label for="to_node_id">目标入口机</label>
         <select id="to_node_id" name="to_node_id" required>
-          {% for node in nodes %}
-          <option value="{{ node.id }}">{{ node.name }} - {{ node.host }}</option>
-          {% endfor %}
+          {% for node in nodes %}<option value="{{ node.id }}">{{ node.name }} - {{ node.host }}</option>{% endfor %}
         </select>
       </div>
       <div class="full actions">
@@ -263,10 +216,7 @@
 {% for rule in rules %}
 <div class="modal" id="edit-rule-{{ rule.id }}" aria-hidden="true">
   <div class="modal-panel">
-    <div class="topline">
-      <h2>编辑规则</h2>
-      <button type="button" onclick="closeModal('edit-rule-{{ rule.id }}')">关闭</button>
-    </div>
+    <div class="topline"><h2>编辑规则</h2><button type="button" onclick="closeModal('edit-rule-{{ rule.id }}')">关闭</button></div>
     <form class="form-grid" method="post" action="/sni-rules/{{ rule.id }}/update">
       {% include "partials/rule_form_fields.html" %}
       <div class="full actions">
@@ -278,32 +228,18 @@
 </div>
 {% endfor %}
 
-<script>
-  function openModal(id) {
-    document.getElementById(id).classList.add('open');
-  }
-  function closeModal(id) {
-    document.getElementById(id).classList.remove('open');
-  }
-</script>
-
 {% if check_result %}
 <div class="modal open" id="check-result-modal" aria-hidden="false">
   <div class="modal-panel">
     <div class="topline">
-      <div>
-        <h2>检测结果</h2>
-        <div class="muted">{{ check_result.remark or check_result.sni_domain }}</div>
-      </div>
+      <div><h2>检测结果</h2><div class="muted">{{ check_result.remark or check_result.sni_domain }}</div></div>
       <a class="button" href="/sni-rules">关闭</a>
     </div>
     <section class="card">
       <h2>入口诊断</h2>
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr><th>名称</th><th>诊断结果详情</th></tr>
-          </thead>
+          <thead><tr><th>名称</th><th>诊断结果详情</th></tr></thead>
           <tbody>
             <tr>
               <td data-label="名称">{{ check_result.node_name or "未绑定入口机" }}</td>
@@ -323,14 +259,39 @@
         </table>
       </div>
     </section>
-    <section class="card" style="margin-top:16px">
-      <h2>面板反馈</h2>
-      <p>发出任务 1<br>回收任务 1</p>
-    </section>
-    <div class="actions" style="justify-content:flex-end;margin-top:16px">
-      <a class="button primary" href="/sni-rules">关闭</a>
-    </div>
+    <section class="card" style="margin-top:16px"><h2>面板反馈</h2><p>发出任务 1<br>回收任务 1</p></section>
+    <div class="actions" style="justify-content:flex-end;margin-top:16px"><a class="button primary" href="/sni-rules">关闭</a></div>
   </div>
 </div>
 {% endif %}
+
+<script>
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+  }
+  function selectedRuleIds() {
+    return Array.from(document.querySelectorAll('.rule-check:checked')).map((item) => item.value).filter(Boolean);
+  }
+  function toggleAllRules(source) {
+    document.querySelectorAll('.desktop-table .rule-check').forEach((item) => {
+      item.checked = source.checked;
+    });
+  }
+  function exportSelectedRules() {
+    const ids = selectedRuleIds();
+    const params = new URLSearchParams();
+    {% if keyword %}params.set('q', '{{ keyword }}');{% endif %}
+    if (ids.length) params.set('ids', ids.join(','));
+    window.location.href = '/sni-rules/export' + (params.toString() ? '?' + params.toString() : '');
+  }
+  const bulkSwitchForm = document.querySelector('#bulk-switch-modal form');
+  if (bulkSwitchForm) {
+    bulkSwitchForm.addEventListener('submit', () => {
+      document.getElementById('selected_rule_ids').value = selectedRuleIds().join(',');
+    });
+  }
+</script>
 {% endblock %}

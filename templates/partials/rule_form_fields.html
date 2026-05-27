@@ -1,0 +1,27 @@
+<div>
+  <label for="node_id_{{ rule.id if rule is defined else 'new' }}">入口机</label>
+  <select id="node_id_{{ rule.id if rule is defined else 'new' }}" name="node_id" required>
+    {% for node in nodes %}
+    <option value="{{ node.id }}" {% if rule is defined and rule.node_id == node.id %}selected{% endif %}>{{ node.name }} - {{ node.host }}</option>
+    {% endfor %}
+  </select>
+</div>
+<div>
+  <label for="sni_domain_{{ rule.id if rule is defined else 'new' }}">SNI 域名</label>
+  <input id="sni_domain_{{ rule.id if rule is defined else 'new' }}" name="sni_domain" value="{{ rule.sni_domain if rule is defined else '' }}" placeholder="edge-hk1.bbb.com" required>
+</div>
+<div>
+  <label for="target_host_{{ rule.id if rule is defined else 'new' }}">落地地址</label>
+  <input id="target_host_{{ rule.id if rule is defined else 'new' }}" name="target_host" value="{{ rule.target_host if rule is defined else '' }}" placeholder="2.2.2.2 或 edge-hk1.example.com" required>
+</div>
+<div>
+  <label for="target_port_{{ rule.id if rule is defined else 'new' }}">落地端口</label>
+  <input id="target_port_{{ rule.id if rule is defined else 'new' }}" name="target_port" type="number" value="{{ rule.target_port if rule is defined else 443 }}" min="1" max="65535" required>
+</div>
+<div class="full">
+  <label for="remark_{{ rule.id if rule is defined else 'new' }}">规则名 / 备注</label>
+  <input id="remark_{{ rule.id if rule is defined else 'new' }}" name="remark" value="{{ rule.remark if rule is defined and rule.remark else '' }}" placeholder="香港落地机">
+</div>
+<div class="full">
+  <label><input style="width:auto;min-height:auto" type="checkbox" name="enabled" {% if rule is not defined or rule.enabled %}checked{% endif %}> 启用</label>
+</div>

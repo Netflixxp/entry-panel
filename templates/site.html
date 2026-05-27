@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}默认网站 - SNI Entry Panel{% endblock %}
+{% block content %}
+<div class="topline">
+  <div>
+    <h1>默认网站</h1>
+    <div class="muted">未命中 SNI 规则时，443 会转到入口机本地真实网站。</div>
+  </div>
+  <a class="button primary" href="/site/preview">预览网站</a>
+</div>
+
+<form class="card form-grid" method="post" action="/site">
+  <div>
+    <label for="domain">默认网站域名</label>
+    <input id="domain" name="domain" value="{{ site.domain }}" required>
+  </div>
+  <div>
+    <label for="site_name">站点名称</label>
+    <input id="site_name" name="site_name" value="{{ site.site_name }}" required>
+  </div>
+  <div class="full">
+    <label for="tagline">站点描述</label>
+    <textarea id="tagline" name="tagline" required>{{ site.tagline }}</textarea>
+  </div>
+  <div class="full">
+    <button class="primary" type="submit">保存默认网站</button>
+  </div>
+</form>
+{% endblock %}

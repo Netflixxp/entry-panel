@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}总览 - SNI Entry Panel{% endblock %}
+{% block content %}
+<div class="topline">
+  <div>
+    <h1>总览</h1>
+    <div class="muted">默认网站：{{ site.domain }}</div>
+  </div>
+  <a class="button primary" href="/entry-nodes/new">添加入口机</a>
+</div>
+
+<section class="grid cols-3">
+  <div class="card">
+    <h2>入口机</h2>
+    <div class="metric">{{ nodes|length }}</div>
+  </div>
+  <div class="card">
+    <h2>SNI 规则</h2>
+    <div class="metric">{{ rules|length }}</div>
+  </div>
+  <div class="card">
+    <h2>启用规则</h2>
+    <div class="metric">{{ rules|selectattr("enabled", "equalto", 1)|list|length }}</div>
+  </div>
+</section>
+
+<section class="card" style="margin-top:16px">
+  <h2>最近应用任务</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>ID</th><th>入口机</th><th>状态</th><th>创建时间</th><th>完成时间</th></tr></thead>
+      <tbody>
+        {% for job in jobs %}
+        <tr>
+          <td data-label="ID">{{ job.id }}</td>
+          <td data-label="入口机">{{ job.node_name }}</td>
+          <td data-label="状态"><span class="badge {% if job.status == 'succeeded' %}ok{% elif job.status == 'failed' %}bad{% else %}warn{% endif %}">{{ job.status|status_label }}</span></td>
+          <td data-label="创建时间">{{ job.created_at }}</td>
+          <td data-label="完成时间">{{ job.finished_at or "-" }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" data-label="提示" class="muted">还没有应用记录。</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card" style="margin-top:16px">
+  <h2>修改管理员密码</h2>
+  <form class="form-grid" method="post" action="/admin/password">
+    <div>
+      <label for="current_password">当前密码</label>
+      <input id="current_password" name="current_password" type="password" required>
+    </div>
+    <div>
+      <label for="new_password">新密码</label>
+      <input id="new_password" name="new_password" type="password" minlength="8" required>
+    </div>
+    <div class="full">
+      <button class="primary" type="submit">更新密码</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

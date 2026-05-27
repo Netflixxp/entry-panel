@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}入口机 - SNI Entry Panel{% endblock %}
+{% block content %}
+<div class="topline">
+  <div>
+    <h1>入口机</h1>
+    <div class="muted">通过 SSH 下发 Nginx stream 配置。</div>
+  </div>
+  <a class="button primary" href="/entry-nodes/new">添加入口机</a>
+</div>
+
+<div class="table-wrap desktop-table">
+  <table>
+    <thead><tr><th>名称</th><th>地址</th><th>SSH</th><th>状态</th><th>最后同步</th><th>操作</th></tr></thead>
+    <tbody>
+      {% for node in nodes %}
+      <tr>
+        <td data-label="名称"><a href="/entry-nodes/{{ node.id }}">{{ node.name }}</a></td>
+        <td data-label="地址">{{ node.host }}</td>
+        <td data-label="SSH">{{ node.ssh_user }}@{{ node.host }}:{{ node.ssh_port }}</td>
+        <td data-label="状态"><span class="badge {% if node.status == 'online' %}ok{% elif node.status == 'error' %}bad{% else %}warn{% endif %}">{{ node.status|status_label }}</span></td>
+        <td data-label="最后同步">{{ node.last_sync_at or "-" }}</td>
+        <td class="actions" data-label="操作">
+          <a class="button" href="/entry-nodes/{{ node.id }}">查看</a>
+          <a class="button" href="/entry-nodes/{{ node.id }}#edit-node">修改</a>
+          <form method="post" action="/entry-nodes/{{ node.id }}/apply" onsubmit="return confirm('同步应用配置到这台入口机？')">
+            <button class="primary" type="submit">同步</button>
+          </form>
+          <form method="post" action="/entry-nodes/{{ node.id }}/delete" onsubmit="return confirm('删除入口机记录？')">
+            <button class="danger" type="submit">删除</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" data-label="提示" class="muted">还没有入口机。</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<section class="mobile-list">
+  {% for node in nodes %}
+  <article class="mobile-card">
+    <div class="mobile-card-title">
+      <div>
+        <strong>{{ node.name }}</strong>
+        <div class="muted">{{ node.host }}</div>
+      </div>
+      <span class="badge {% if node.status == 'online' %}ok{% elif node.status == 'error' %}bad{% else %}warn{% endif %}">{{ node.status|status_label }}</span>
+    </div>
+    <div class="mobile-field"><span>SSH</span>{{ node.ssh_user }}@{{ node.host }}:{{ node.ssh_port }}</div>
+    <div class="mobile-field"><span>最后同步</span>{{ node.last_sync_at or "-" }}</div>
+    <div class="actions">
+      <a class="button" href="/entry-nodes/{{ node.id }}">查看</a>
+      <a class="button" href="/entry-nodes/{{ node.id }}#edit-node">修改</a>
+      <form method="post" action="/entry-nodes/{{ node.id }}/apply" onsubmit="return confirm('同步应用配置到这台入口机？')">
+        <button class="primary" type="submit">同步</button>
+      </form>
+      <form method="post" action="/entry-nodes/{{ node.id }}/delete" onsubmit="return confirm('删除入口机记录？')">
+        <button class="danger" type="submit">删除</button>
+      </form>
+    </div>
+  </article>
+  {% else %}
+  <div class="mobile-card muted">还没有入口机。</div>
+  {% endfor %}
+</section>
+{% endblock %}

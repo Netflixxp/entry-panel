@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}添加入口机 - SNI Entry Panel{% endblock %}
+{% block content %}
+<div class="topline">
+  <div>
+    <h1>添加入口机</h1>
+    <div class="muted">入口机需要 Debian、SSH、Nginx 和可用的 80/443 端口。</div>
+  </div>
+</div>
+
+<form class="card form-grid" method="post" action="/entry-nodes">
+  <div>
+    <label for="name">名称</label>
+    <input id="name" name="name" placeholder="HK Entry 1" required>
+  </div>
+  <div>
+    <label for="host">公网 IP 或主机名</label>
+    <input id="host" name="host" placeholder="1.1.1.1" required>
+  </div>
+  <div>
+    <label for="ssh_port">SSH 端口</label>
+    <input id="ssh_port" name="ssh_port" type="number" value="22" min="1" max="65535" required>
+  </div>
+  <div>
+    <label for="ssh_user">SSH 用户</label>
+    <input id="ssh_user" name="ssh_user" value="root" required>
+  </div>
+  <div class="full">
+    <label for="ssh_key_path">SSH 私钥路径</label>
+    <input id="ssh_key_path" name="ssh_key_path" placeholder="/root/.ssh/id_ed25519">
+  </div>
+  <div class="full">
+    <label for="ssh_password">SSH 密码</label>
+    <input id="ssh_password" name="ssh_password" type="password" autocomplete="off">
+  </div>
+  <div class="full actions">
+    <button class="primary" type="submit">保存入口机</button>
+    <a class="button" href="/entry-nodes">返回</a>
+  </div>
+</form>
+{% endblock %}

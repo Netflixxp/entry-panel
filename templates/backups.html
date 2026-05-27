@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}备份迁移 - SNI Entry Panel{% endblock %}
+{% block content %}
+<div class="topline">
+  <div>
+    <h1>备份迁移</h1>
+    <div class="muted">导出规则、入口机记录和默认网站配置；导入后可重新同步到入口机。</div>
+  </div>
+  <a class="button primary" href="/backups/export">导出备份</a>
+</div>
+
+<section class="card">
+  <h2>导入备份</h2>
+  <form class="form-grid" method="post" action="/backups/import" enctype="multipart/form-data">
+    <div class="full">
+      <label for="file">备份 zip</label>
+      <input id="file" type="file" name="file" accept=".zip" required>
+    </div>
+    <div class="full">
+      <button class="primary" type="submit">导入并覆盖当前配置</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

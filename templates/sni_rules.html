@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+{% block title %}SNI 规则 - SNI Entry Panel{% endblock %}
+{% block content %}
+<div class="topline">
+  <div>
+    <h1>SNI 规则</h1>
+    <div class="muted">每条规则绑定一台入口机；新增、修改、删除、启停后只自动同步对应入口机。</div>
+  </div>
+  <button class="primary" type="button" onclick="openModal('add-rule-modal')">添加规则</button>
+</div>
+
+<section class="table-wrap desktop-table">
+  <table>
+    <thead>
+      <tr>
+        <th>规则名</th>
+        <th>入口</th>
+        <th>出口</th>
+        <th>连通性</th>
+        <th>已用流量</th>
+        <th>状态</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rule in rules %}
+      {% set used_bytes = (rule.traffic_bytes or 0) - (rule.traffic_offset_bytes or 0) %}
+      <tr>
+        <td data-label="规则名">
+          <strong>{{ rule.remark or rule.sni_domain }}</strong>
+          <div class="muted">{{ rule.sni_domain }}</div>
+        </td>
+        <td data-label="入口">
+          {{ rule.node_name or "未绑定入口机" }}
+          <div class="muted">{{ rule.node_host or "-" }}</div>
+        </td>
+        <td data-label="出口">
+          {{ rule.target_host }}:{{ rule.target_port }}
+        </td>
+        <td data-label="连通性">
+          {% if rule.last_check_at %}
+            {% if rule.last_check_ok %}
+              <span class="badge ok">通 {{ rule.last_check_latency_ms }}ms</span>
+              <div class="muted">落地 IP：{{ rule.last_check_ip }}</div>
+              {% if rule.last_check_error %}<div class="muted">{{ rule.last_check_error }}</div>{% endif %}
+            {% else %}
+              <span class="badge bad">不通</span>
+              <div class="muted">{{ rule.last_check_error or "-" }}</div>
+            {% endif %}
+          {% else %}
+            <span class="badge warn">未检测</span>
+            <div class="muted">入口机到落地机</div>
+          {% endif %}
+        </td>
+        <td data-label="已用流量">
+          <strong>{{ used_bytes|format_bytes }}</strong>
+          <div class="actions" style="margin-top:8px">
+            <form method="post" action="/sni-rules/{{ rule.id }}/traffic">
+              <button type="submit">刷新</button>
+            </form>
+            <form method="post" action="/sni-rules/{{ rule.id }}/traffic/clear" onsubmit="return confirm('清空这条规则的流量统计？')">
+              <button type="submit">清空</button>
+            </form>
+          </div>
+        </td>
+        <td data-label="状态">
+          <span class="badge {% if rule.enabled %}ok{% else %}warn{% endif %}">{{ "正常" if rule.enabled else "停用" }}</span>
+        </td>
+        <td class="actions" data-label="操作">
+          <form method="post" action="/sni-rules/{{ rule.id }}/check">
+            <button type="submit" title="检测入口机到落地机">检测</button>
+          </form>
+          <button type="button" onclick="openModal('edit-rule-{{ rule.id }}')">编辑</button>
+          <form method="post" action="/sni-rules/{{ rule.id }}/toggle">
+            <button type="submit">{{ "停用" if rule.enabled else "启用" }}</button>
+          </form>
+          <form method="post" action="/sni-rules/{{ rule.id }}/delete" onsubmit="return confirm('删除这条 SNI 规则并同步到对应入口机？')">
+            <button class="danger" type="submit">删除</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" data-label="提示" class="muted">还没有 SNI 规则。</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="mobile-list">
+  {% for rule in rules %}
+  {% set used_bytes = (rule.traffic_bytes or 0) - (rule.traffic_offset_bytes or 0) %}
+  <details class="mobile-card rule-accordion">
+    <summary>
+      <div>
+        <strong>{{ rule.remark or rule.sni_domain }}</strong>
+        <div class="muted">{{ rule.sni_domain }}</div>
+        <div class="muted">{{ rule.node_name or "未绑定入口机" }} -> {{ rule.target_host }}:{{ rule.target_port }}</div>
+      </div>
+      <div class="summary-badges">
+        {% if rule.last_check_ok %}
+          <span class="badge ok">{{ rule.last_check_latency_ms }}ms</span>
+        {% else %}
+          <span class="badge warn">未通</span>
+        {% endif %}
+        <span class="badge {% if rule.enabled %}ok{% else %}warn{% endif %}">{{ "正常" if rule.enabled else "停用" }}</span>
+      </div>
+    </summary>
+    <div class="mobile-field">
+      <span>入口</span>
+      <div>{{ rule.node_name or "未绑定入口机" }}<div class="muted">{{ rule.node_host or "-" }}</div></div>
+    </div>
+    <div class="mobile-field">
+      <span>出口</span>
+      <div>{{ rule.target_host }}:{{ rule.target_port }}</div>
+    </div>
+    <div class="mobile-field">
+      <span>连通性</span>
+      <div>
+        {% if rule.last_check_at %}
+          {% if rule.last_check_ok %}
+            <span class="badge ok">通 {{ rule.last_check_latency_ms }}ms</span>
+            <div class="muted">落地 IP：{{ rule.last_check_ip }}</div>
+            {% if rule.last_check_error %}<div class="muted">{{ rule.last_check_error }}</div>{% endif %}
+          {% else %}
+            <span class="badge bad">不通</span>
+            <div class="muted">{{ rule.last_check_error or "-" }}</div>
+          {% endif %}
+        {% else %}
+          <span class="badge warn">未检测</span>
+          <div class="muted">入口机到落地机</div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="mobile-field">
+      <span>已用流量</span>
+      <strong>{{ used_bytes|format_bytes }}</strong>
+    </div>
+    <div class="actions">
+      <form method="post" action="/sni-rules/{{ rule.id }}/check">
+        <button type="submit">检测</button>
+      </form>
+      <button type="button" onclick="openModal('edit-rule-{{ rule.id }}')">编辑</button>
+      <form method="post" action="/sni-rules/{{ rule.id }}/traffic">
+        <button type="submit">刷新流量</button>
+      </form>
+      <form method="post" action="/sni-rules/{{ rule.id }}/traffic/clear" onsubmit="return confirm('清空这条规则的流量统计？')">
+        <button type="submit">清空流量</button>
+      </form>
+      <form method="post" action="/sni-rules/{{ rule.id }}/toggle">
+        <button type="submit">{{ "停用" if rule.enabled else "启用" }}</button>
+      </form>
+      <form method="post" action="/sni-rules/{{ rule.id }}/delete" onsubmit="return confirm('删除这条 SNI 规则并同步到对应入口机？')">
+        <button class="danger" type="submit">删除</button>
+      </form>
+    </div>
+  </details>
+  {% else %}
+  <div class="mobile-card muted">还没有 SNI 规则。</div>
+  {% endfor %}
+</section>
+
+<div class="modal" id="add-rule-modal" aria-hidden="true">
+  <div class="modal-panel">
+    <div class="topline">
+      <h2>添加规则</h2>
+      <button type="button" onclick="closeModal('add-rule-modal')">关闭</button>
+    </div>
+    <form class="form-grid" method="post" action="/sni-rules">
+      {% include "partials/rule_form_fields.html" %}
+      <div class="full actions">
+        <button class="primary" type="submit">添加并同步</button>
+        <button type="button" onclick="closeModal('add-rule-modal')">取消</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% for rule in rules %}
+<div class="modal" id="edit-rule-{{ rule.id }}" aria-hidden="true">
+  <div class="modal-panel">
+    <div class="topline">
+      <h2>编辑规则</h2>
+      <button type="button" onclick="closeModal('edit-rule-{{ rule.id }}')">关闭</button>
+    </div>
+    <form class="form-grid" method="post" action="/sni-rules/{{ rule.id }}/update">
+      {% include "partials/rule_form_fields.html" %}
+      <div class="full actions">
+        <button class="primary" type="submit">保存并同步</button>
+        <button type="button" onclick="closeModal('edit-rule-{{ rule.id }}')">取消</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endfor %}
+
+<script>
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+  }
+</script>
+
+{% if check_result %}
+<div class="modal open" id="check-result-modal" aria-hidden="false">
+  <div class="modal-panel">
+    <div class="topline">
+      <div>
+        <h2>检测结果</h2>
+        <div class="muted">{{ check_result.remark or check_result.sni_domain }}</div>
+      </div>
+      <a class="button" href="/sni-rules">关闭</a>
+    </div>
+    <section class="card">
+      <h2>入口诊断</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>名称</th><th>诊断结果详情</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="名称">{{ check_result.node_name or "未绑定入口机" }}</td>
+              <td data-label="诊断结果详情">
+                {% if check_result.last_check_ok %}
+                  目标地址数：1/1<br>
+                  用时 {{ check_result.last_check_latency_ms }} ms<br>
+                  落地 IP：{{ check_result.last_check_ip }}<br>
+                  {{ check_result.last_check_error or "" }}
+                {% else %}
+                  检测失败<br>
+                  {{ check_result.last_check_error or "未知错误" }}
+                {% endif %}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="card" style="margin-top:16px">
+      <h2>面板反馈</h2>
+      <p>发出任务 1<br>回收任务 1</p>
+    </section>
+    <div class="actions" style="justify-content:flex-end;margin-top:16px">
+      <a class="button primary" href="/sni-rules">关闭</a>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

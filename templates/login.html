@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>登录 - SNI Entry Panel</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <main class="login">
+    <form class="login-card" method="post" action="/login">
+      <h1>登录面板</h1>
+      <p class="muted">管理入口机、SNI 分流和默认资源站。</p>
+      {% if error %}<p class="error">{{ error }}</p>{% endif %}
+      <div class="grid">
+        <div>
+          <label for="username">用户名</label>
+          <input id="username" name="username" autocomplete="username" required>
+        </div>
+        <div>
+          <label for="password">密码</label>
+          <input id="password" type="password" name="password" autocomplete="current-password" required>
+        </div>
+        <button class="primary" type="submit">登录</button>
+      </div>
+    </form>
+  </main>
+</body>
+</html>

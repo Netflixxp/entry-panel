@@ -1,0 +1,12 @@
+services:
+  entry-panel:
+    build: .
+    container_name: anytls-entry-panel
+    restart: unless-stopped
+    ports:
+      - "${PANEL_PORT:-8000}:8000"
+    environment:
+      TZ: "${TZ:-Asia/Shanghai}"
+    volumes:
+      - ./data:/app/data
+      - ./ssh:/ssh:ro

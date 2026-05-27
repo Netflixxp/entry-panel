@@ -142,6 +142,30 @@ def render_site_html(site: Row, section: str = "home", preview: bool = False) ->
     nav_downloads = "/site/preview/downloads" if preview else "/downloads/"
     nav_assets = "/site/preview/assets" if preview else "/assets/"
     back_link = '<a class="preview-back" href="/site">Back to panel</a>' if preview else ""
+    chart_svg = """<svg viewBox="0 0 640 180" role="img" aria-label="Regional infrastructure chart">
+      <rect width="640" height="180" fill="#f6f8fb"/>
+      <path d="M0 138 L70 124 L140 130 L210 92 L280 104 L350 68 L420 76 L490 48 L560 58 L640 30 L640 180 L0 180 Z" fill="#d8e7ef"/>
+      <path d="M0 138 L70 124 L140 130 L210 92 L280 104 L350 68 L420 76 L490 48 L560 58 L640 30" fill="none" stroke="#1c6b72" stroke-width="5"/>
+      <g fill="#b48a3c"><circle cx="210" cy="92" r="7"/><circle cx="350" cy="68" r="7"/><circle cx="490" cy="48" r="7"/><circle cx="640" cy="30" r="7"/></g>
+      <g fill="#617081" font-size="18" font-family="Arial"><text x="28" y="36">Availability Index</text><text x="470" y="158">Q2 2026</text></g>
+    </svg>"""
+    network_svg = """<svg viewBox="0 0 640 180" role="img" aria-label="Network delivery diagram">
+      <rect width="640" height="180" fill="#f6f8fb"/>
+      <g stroke="#9fb4c3" stroke-width="3" fill="none"><path d="M120 92 C220 20 330 20 430 92"/><path d="M120 92 C230 160 330 160 430 92"/><path d="M430 92 L540 52"/><path d="M430 92 L540 132"/></g>
+      <g fill="#0f2436"><circle cx="120" cy="92" r="28"/><circle cx="430" cy="92" r="28"/><circle cx="540" cy="52" r="22"/><circle cx="540" cy="132" r="22"/></g>
+      <g fill="#b48a3c"><circle cx="120" cy="92" r="10"/><circle cx="430" cy="92" r="10"/><circle cx="540" cy="52" r="8"/><circle cx="540" cy="132" r="8"/></g>
+      <g fill="#617081" font-size="17" font-family="Arial"><text x="36" y="38">Resource Flow</text><text x="450" y="164">Mirror Nodes</text></g>
+    </svg>"""
+    media_svg = """<svg viewBox="0 0 640 180" role="img" aria-label="Publication media preview">
+      <rect width="640" height="180" fill="#f8f4ec"/>
+      <rect x="36" y="30" width="168" height="112" fill="#ffffff" stroke="#d8e0e9"/>
+      <rect x="236" y="30" width="168" height="112" fill="#ffffff" stroke="#d8e0e9"/>
+      <rect x="436" y="30" width="168" height="112" fill="#ffffff" stroke="#d8e0e9"/>
+      <path d="M58 116 L92 82 L126 104 L162 64 L184 116 Z" fill="#d8e7ef"/>
+      <path d="M258 118 H382 M258 88 H362 M258 58 H334" stroke="#1c6b72" stroke-width="8"/>
+      <circle cx="500" cy="86" r="38" fill="#d8e7ef"/><path d="M500 48 A38 38 0 0 1 538 86 L500 86 Z" fill="#b48a3c"/>
+      <g fill="#617081" font-size="17" font-family="Arial"><text x="36" y="164">Report Media Pack</text></g>
+    </svg>"""
     active = {"home": "", "docs": "", "downloads": "", "assets": ""}
     active[section if section in active else "home"] = "active"
     pages = {
@@ -307,13 +331,13 @@ def render_site_html(site: Row, section: str = "home", preview: bool = False) ->
                 ("Systems", "Architecture Diagrams", "Versioned diagrams for operational and documentation packages."),
                 ("Brand", "Publication Assets", "Presentation images, icons, and executive summary media."),
             ],
-            "extra": """
+            "extra": f"""
     <section class="section panel">
       <h2>Asset Collections</h2>
       <div class="asset-grid">
-        <div><span class="thumb a"></span><strong>Research Charts</strong><p>Regional infrastructure and availability charts.</p></div>
-        <div><span class="thumb b"></span><strong>Network Diagrams</strong><p>Static diagrams for resource and delivery documentation.</p></div>
-        <div><span class="thumb c"></span><strong>Publication Media</strong><p>Images and icons for reports, portals, and release notes.</p></div>
+        <div><span class="thumb a">{chart_svg}</span><strong>Research Charts</strong><p>Regional infrastructure and availability charts.</p></div>
+        <div><span class="thumb b">{network_svg}</span><strong>Network Diagrams</strong><p>Static diagrams for resource and delivery documentation.</p></div>
+        <div><span class="thumb c">{media_svg}</span><strong>Publication Media</strong><p>Images and icons for reports, portals, and release notes.</p></div>
       </div>
     </section>
     <section class="section panel">
@@ -436,7 +460,8 @@ def render_site_html(site: Row, section: str = "home", preview: bool = False) ->
     .content-table th {{ color: var(--muted); font-size: 13px; }}
     .asset-grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }}
     .asset-grid div {{ border: 1px solid var(--line); border-radius: 2px; padding: 14px; }}
-    .thumb {{ display: block; min-height: 110px; margin-bottom: 12px; border-radius: 2px; background: linear-gradient(135deg, #d9e1e8, #f4efe5); border: 1px solid var(--line); }}
+    .thumb {{ display: block; min-height: 110px; margin-bottom: 12px; border-radius: 2px; background: #f6f8fb; border: 1px solid var(--line); overflow: hidden; }}
+    .thumb svg {{ display: block; width: 100%; height: 100%; min-height: 110px; }}
     .thumb.b {{ background: linear-gradient(135deg, #e2e7ed, #cfd8df); }}
     .thumb.c {{ background: linear-gradient(135deg, #efe7d8, #d9e4e4); }}
     code {{ background: #edf2f7; padding: 2px 6px; border-radius: 4px; }}

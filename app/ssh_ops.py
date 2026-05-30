@@ -141,6 +141,11 @@ def apply_config(node: Row, rendered: RenderedConfig, domain: str) -> CommandRes
             _write_file(sftp, posixpath.join(remote_root, "docs.html"), rendered.docs_html)
             _write_file(sftp, posixpath.join(remote_root, "downloads.html"), rendered.downloads_html)
             _write_file(sftp, posixpath.join(remote_root, "assets.html"), rendered.assets_html)
+            _write_file(sftp, posixpath.join(remote_root, "about.html"), rendered.about_html)
+            _write_file(sftp, posixpath.join(remote_root, "research.html"), rendered.research_html)
+            _write_file(sftp, posixpath.join(remote_root, "markets.html"), rendered.markets_html)
+            _write_file(sftp, posixpath.join(remote_root, "insights.html"), rendered.insights_html)
+            _write_file(sftp, posixpath.join(remote_root, "contact.html"), rendered.contact_html)
             sftp.close()
 
             commands = [
@@ -150,10 +155,15 @@ def apply_config(node: Row, rendered: RenderedConfig, domain: str) -> CommandRes
                 f"mkdir -p {backup_dir}",
                 f"cp -a /etc/nginx/nginx.conf {backup_dir}/nginx.conf.bak 2>/dev/null || true",
                 f"cp {remote_root}/index.html /var/www/entry-panel-site/index.html",
-                "mkdir -p /var/www/entry-panel-site/docs /var/www/entry-panel-site/downloads /var/www/entry-panel-site/assets",
+                "mkdir -p /var/www/entry-panel-site/docs /var/www/entry-panel-site/downloads /var/www/entry-panel-site/assets /var/www/entry-panel-site/about /var/www/entry-panel-site/research /var/www/entry-panel-site/markets /var/www/entry-panel-site/insights /var/www/entry-panel-site/contact",
                 f"cp {remote_root}/docs.html /var/www/entry-panel-site/docs/index.html",
                 f"cp {remote_root}/downloads.html /var/www/entry-panel-site/downloads/index.html",
                 f"cp {remote_root}/assets.html /var/www/entry-panel-site/assets/index.html",
+                f"cp {remote_root}/about.html /var/www/entry-panel-site/about/index.html",
+                f"cp {remote_root}/research.html /var/www/entry-panel-site/research/index.html",
+                f"cp {remote_root}/markets.html /var/www/entry-panel-site/markets/index.html",
+                f"cp {remote_root}/insights.html /var/www/entry-panel-site/insights/index.html",
+                f"cp {remote_root}/contact.html /var/www/entry-panel-site/contact/index.html",
                 f"cp {remote_root}/nginx-acme.conf /etc/nginx/nginx.conf",
                 "nginx -t",
                 "systemctl reload nginx || systemctl restart nginx",

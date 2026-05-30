@@ -13,6 +13,11 @@ class RenderedConfig:
     docs_html: str
     downloads_html: str
     assets_html: str
+    about_html: str
+    research_html: str
+    markets_html: str
+    insights_html: str
+    contact_html: str
 
 
 def render_acme_nginx_conf(site: Row) -> str:
@@ -141,6 +146,11 @@ def render_site_html(site: Row, section: str = "home", preview: bool = False) ->
     nav_docs = "/site/preview/docs" if preview else "/docs/"
     nav_downloads = "/site/preview/downloads" if preview else "/downloads/"
     nav_assets = "/site/preview/assets" if preview else "/assets/"
+    nav_about = "/site/preview/about" if preview else "/about/"
+    nav_research = "/site/preview/research" if preview else "/research/"
+    nav_markets = "/site/preview/markets" if preview else "/markets/"
+    nav_insights = "/site/preview/insights" if preview else "/insights/"
+    nav_contact = "/site/preview/contact" if preview else "/contact/"
     back_link = '<a class="preview-back" href="/site">Back to panel</a>' if preview else ""
     chart_svg = """<svg viewBox="0 0 640 180" role="img" aria-label="Regional infrastructure chart">
       <rect width="640" height="180" fill="#f6f8fb"/>
@@ -166,7 +176,17 @@ def render_site_html(site: Row, section: str = "home", preview: bool = False) ->
       <circle cx="500" cy="86" r="38" fill="#d8e7ef"/><path d="M500 48 A38 38 0 0 1 538 86 L500 86 Z" fill="#b48a3c"/>
       <g fill="#617081" font-size="17" font-family="Arial"><text x="36" y="164">Report Media Pack</text></g>
     </svg>"""
-    active = {"home": "", "docs": "", "downloads": "", "assets": ""}
+    active = {
+        "home": "",
+        "about": "",
+        "research": "",
+        "markets": "",
+        "insights": "",
+        "docs": "",
+        "downloads": "",
+        "assets": "",
+        "contact": "",
+    }
     active[section if section in active else "home"] = "active"
     pages = {
         "home": {
@@ -232,6 +252,219 @@ def render_site_html(site: Row, section: str = "home", preview: bool = False) ->
       <div>
         <p><strong>Email</strong><br>research@globalresource.example</p>
         <p><strong>Office</strong><br>1200 Market Street, Suite 410<br>New York, NY 10005</p>
+      </div>
+    </section>""",
+        },
+        "about": {
+            "eyebrow": "About the firm",
+            "title": "Independent research operations for digital infrastructure markets.",
+            "intro": f"{site_name} maintains a public resource center for market intelligence, infrastructure reporting, release archives, and verified static publication workflows.",
+            "metric": "2018",
+            "metric_label": "research operations established",
+            "cards": [
+                ("Mandate", "Infrastructure Coverage", "We track data centers, enterprise software delivery, network availability, and supporting resource operations."),
+                ("Process", "Publication Discipline", "Research notes and resource packages are organized with version identifiers, review records, and retention windows."),
+                ("Audience", "Enterprise Readers", "The library is structured for analysts, infrastructure managers, procurement teams, and continuity planners."),
+            ],
+            "extra": """
+    <section class="section panel">
+      <span class="panel-label">Operating profile</span>
+      <h2>Built around stable public information and repeatable publication controls.</h2>
+      <p>The resource center combines long-lived reference pages, monthly research summaries, and static asset archives. Each area is designed to remain readable without interactive dashboards, account systems, or short-lived application state.</p>
+      <div class="profile-grid">
+        <div><strong>Research Desk</strong><span>Maintains market summaries, regional infrastructure notes, and publication calendars.</span></div>
+        <div><strong>Data Operations</strong><span>Reviews public indicators, availability reports, and archive integrity records.</span></div>
+        <div><strong>Publication Team</strong><span>Prepares documents, release manifests, charts, and web-ready resource bundles.</span></div>
+        <div><strong>Continuity Review</strong><span>Checks access paths, static delivery health, and documented update procedures.</span></div>
+      </div>
+    </section>
+    <section class="section split">
+      <div class="panel quiet">
+        <h2>Governance</h2>
+        <p>Editorial updates follow a lightweight control model: source review, publication approval, version assignment, archive retention, and periodic refresh.</p>
+      </div>
+      <div class="panel quiet">
+        <h2>Coverage Boundaries</h2>
+        <p>We focus on observable infrastructure, public market signals, resource delivery practices, and documentation systems used by operational teams.</p>
+      </div>
+    </section>
+    <section class="section panel">
+      <h2>Company Milestones</h2>
+      <table class="content-table">
+        <tr><th>Year</th><th>Milestone</th><th>Focus</th></tr>
+        <tr><td>2018</td><td>Research operations launched</td><td>Digital infrastructure tracking</td></tr>
+        <tr><td>2021</td><td>Static publication archive introduced</td><td>Document retention and release integrity</td></tr>
+        <tr><td>2024</td><td>Regional availability reporting expanded</td><td>Americas, Europe, Asia-Pacific</td></tr>
+        <tr><td>2026</td><td>Resource center consolidated</td><td>Research, downloads, media, documentation</td></tr>
+      </table>
+    </section>""",
+        },
+        "research": {
+            "eyebrow": "Research platform",
+            "title": "Market research shaped for infrastructure and operations teams.",
+            "intro": "Research pages combine recurring market briefs, methodology notes, and regional observations for teams that need a stable public reference.",
+            "metric": "52",
+            "metric_label": "scheduled research releases per year",
+            "cards": [
+                ("Briefs", "Quarterly Market Review", "Coverage of data center investment, network capacity, and enterprise delivery demand."),
+                ("Indexes", "Availability Indicators", "Published notes for delivery health, latency ranges, and regional access continuity."),
+                ("Methodology", "Source Framework", "Structured explanations of how public signals, release data, and infrastructure notes are interpreted."),
+            ],
+            "extra": """
+    <section class="section panel">
+      <h2>Research Series</h2>
+      <table class="content-table">
+        <tr><th>Series</th><th>Cadence</th><th>Scope</th><th>Latest</th></tr>
+        <tr><td>Digital Infrastructure Monitor</td><td>Monthly</td><td>Capacity, regions, operators</td><td>May 2026</td></tr>
+        <tr><td>Resource Delivery Index</td><td>Weekly</td><td>Availability, mirrors, static archives</td><td>Week 22</td></tr>
+        <tr><td>Enterprise Release Notes</td><td>Monthly</td><td>Versioning, manifests, package controls</td><td>May 2026</td></tr>
+        <tr><td>Regional Continuity Brief</td><td>Quarterly</td><td>Americas, Europe, Asia-Pacific</td><td>Q2 2026</td></tr>
+      </table>
+    </section>
+    <section class="section panel">
+      <h2>Analyst Notes</h2>
+      <div class="news-grid">
+        <article><strong>Cloud delivery teams keep static artifacts in the critical path</strong><p>Public release catalogs remain valuable because they reduce dependency on account-gated dashboards during incidents.</p><span>Research note</span></article>
+        <article><strong>Regional capacity planning emphasizes continuity signals</strong><p>Market teams are comparing documented availability and infrastructure expansion before allocating workloads.</p><span>Market note</span></article>
+        <article><strong>Checksum manifests become part of vendor due diligence</strong><p>Procurement teams increasingly treat file integrity records as a basic operational control.</p><span>Operations note</span></article>
+      </div>
+    </section>
+    <section class="section split">
+      <div class="panel quiet">
+        <h2>Research Inputs</h2>
+        <p>Public filings, operator updates, network availability observations, release catalogs, procurement notes, and archived documentation updates.</p>
+      </div>
+      <div class="panel quiet">
+        <h2>Publication Format</h2>
+        <p>Research outputs are published as static pages, downloadable packets, and reusable chart sets for repeat reading and long-term reference.</p>
+      </div>
+    </section>""",
+        },
+        "markets": {
+            "eyebrow": "Market coverage",
+            "title": "Regional intelligence across data, delivery, and network infrastructure.",
+            "intro": "Coverage pages summarize observed infrastructure conditions, resource availability, and operational indicators by business region.",
+            "metric": "18",
+            "metric_label": "regional markets under review",
+            "cards": [
+                ("Americas", "Capacity and Enterprise Demand", "Coverage of cloud regions, data center clusters, and software delivery requirements."),
+                ("Europe", "Compliance-Aware Operations", "Notes on archive continuity, regional access, and documentation retention practices."),
+                ("Asia-Pacific", "High-Growth Delivery Routes", "Market observations for resource distribution, latency bands, and public release access."),
+            ],
+            "extra": """
+    <section class="section panel">
+      <h2>Coverage Matrix</h2>
+      <table class="content-table">
+        <tr><th>Region</th><th>Primary indicators</th><th>Coverage status</th><th>Review cadence</th></tr>
+        <tr><td>North America</td><td>Data center capacity, enterprise delivery, release availability</td><td>Active</td><td>Weekly</td></tr>
+        <tr><td>Western Europe</td><td>Regional retention, compliance notes, documentation access</td><td>Active</td><td>Biweekly</td></tr>
+        <tr><td>East Asia</td><td>Latency bands, resource mirrors, software release routes</td><td>Active</td><td>Weekly</td></tr>
+        <tr><td>Southeast Asia</td><td>Connectivity growth, local access points, archive demand</td><td>Developing</td><td>Monthly</td></tr>
+      </table>
+    </section>
+    <section class="section panel">
+      <h2>Market Indicators</h2>
+      <div class="profile-grid">
+        <div><strong>Capacity</strong><span>Public expansion signals, regional hosting density, and data center investment notes.</span></div>
+        <div><strong>Availability</strong><span>Observed access continuity, mirror behavior, and static resource delivery windows.</span></div>
+        <div><strong>Release Activity</strong><span>Package cadence, documentation volume, and visible version updates.</span></div>
+        <div><strong>Operational Risk</strong><span>Dependency concentration, maintenance windows, and access policy changes.</span></div>
+      </div>
+    </section>
+    <section class="section contact-band">
+      <div>
+        <span class="panel-label">Regional notes</span>
+        <h2>Coverage summaries are refreshed on a fixed operating calendar.</h2>
+        <p>Readers can use the markets area as an at-a-glance entry point before moving into research briefs, documents, or downloadable packages.</p>
+      </div>
+      <div>
+        <p><strong>Next update</strong><br>June 2026 regional continuity note</p>
+        <p><strong>Format</strong><br>Static report, chart pack, and archive manifest</p>
+      </div>
+    </section>""",
+        },
+        "insights": {
+            "eyebrow": "Insights",
+            "title": "Commentary and updates from the research desk.",
+            "intro": "The insights section provides shorter notes, publication updates, and operational observations between formal research releases.",
+            "metric": "36",
+            "metric_label": "insight notes published this year",
+            "cards": [
+                ("Commentary", "Infrastructure Signals", "Short market notes about infrastructure activity and delivery operations."),
+                ("Updates", "Publication Activity", "Announcements for refreshed documents, archive packages, and media libraries."),
+                ("Review", "Operational Lessons", "Practical observations from continuity reviews and resource publishing workflows."),
+            ],
+            "extra": """
+    <section class="section panel">
+      <h2>Latest Commentary</h2>
+      <div class="news-grid">
+        <article><strong>Static resource portals remain important during high-change release cycles</strong><p>Teams continue to value simple pages with predictable document paths and visible update dates.</p><span>May 28, 2026</span></article>
+        <article><strong>Regional access planning moves earlier in infrastructure procurement</strong><p>Availability notes are increasingly reviewed before vendor onboarding and workload migration decisions.</p><span>May 22, 2026</span></article>
+        <article><strong>Research charts are being reused across operational runbooks</strong><p>Chart packs help teams communicate capacity, release, and availability trends without rebuilding visuals.</p><span>May 14, 2026</span></article>
+      </div>
+    </section>
+    <section class="section split">
+      <div class="panel quiet">
+        <h2>Editorial Calendar</h2>
+        <p>Weekly resource delivery notes, monthly infrastructure summaries, quarterly market briefs, and semiannual methodology reviews.</p>
+      </div>
+      <div class="panel quiet">
+        <h2>Subscriber Materials</h2>
+        <p>Public summaries are paired with downloadable archives, chart images, and retained document snapshots for continuity and audit use.</p>
+      </div>
+    </section>
+    <section class="section panel">
+      <h2>Insight Archive</h2>
+      <table class="content-table">
+        <tr><th>Title</th><th>Category</th><th>Publication date</th></tr>
+        <tr><td>Mirror strategies for long-lived resource pages</td><td>Operations</td><td>2026-05-09</td></tr>
+        <tr><td>Digital infrastructure demand remains broad across enterprise sectors</td><td>Markets</td><td>2026-04-29</td></tr>
+        <tr><td>Release manifests and checksum records support downstream trust</td><td>Documentation</td><td>2026-04-17</td></tr>
+        <tr><td>Regional continuity plans become part of procurement reviews</td><td>Research</td><td>2026-03-30</td></tr>
+      </table>
+    </section>""",
+        },
+        "contact": {
+            "eyebrow": "Contact",
+            "title": "Resource coordination and research inquiries.",
+            "intro": "Contact pages give the site a normal institutional footprint: research desk, publication requests, archive support, and regional information channels.",
+            "metric": "4",
+            "metric_label": "public inquiry channels",
+            "cards": [
+                ("Research", "Market Notes", "Questions about research series, methodology notes, and regional market summaries."),
+                ("Publication", "Resource Access", "Requests related to documents, download archives, manifests, and static media packages."),
+                ("Operations", "Availability Reports", "Inquiries about resource continuity notes, mirror observations, and update schedules."),
+            ],
+            "extra": """
+    <section class="section panel">
+      <h2>Contact Directory</h2>
+      <table class="content-table">
+        <tr><th>Desk</th><th>Use case</th><th>Email</th><th>Response window</th></tr>
+        <tr><td>Research Desk</td><td>Market and methodology questions</td><td>research@globalresource.example</td><td>2 business days</td></tr>
+        <tr><td>Publication Desk</td><td>Documents, archives, manifests</td><td>publications@globalresource.example</td><td>1 business day</td></tr>
+        <tr><td>Media Library</td><td>Charts, diagrams, report assets</td><td>media@globalresource.example</td><td>2 business days</td></tr>
+        <tr><td>Operations Review</td><td>Availability and continuity notes</td><td>operations@globalresource.example</td><td>1 business day</td></tr>
+      </table>
+    </section>
+    <section class="section split">
+      <div class="panel quiet">
+        <h2>Head Office</h2>
+        <p>1200 Market Street, Suite 410<br>New York, NY 10005<br>United States</p>
+      </div>
+      <div class="panel quiet">
+        <h2>Publication Hours</h2>
+        <p>Monday through Friday, 09:00-17:00 Eastern Time. Scheduled resource updates are normally published outside primary market hours.</p>
+      </div>
+    </section>
+    <section class="section contact-band">
+      <div>
+        <span class="panel-label">Before contacting</span>
+        <h2>Most requests can be routed by document family or archive channel.</h2>
+        <p>Include the publication name, package version, region, and intended use case so the correct desk can respond with the right reference material.</p>
+      </div>
+      <div>
+        <p><strong>Public resources</strong><br>Documents, downloads, charts, release manifests</p>
+        <p><strong>Preferred format</strong><br>Email with publication identifier and request summary</p>
       </div>
     </section>""",
         },
@@ -353,9 +586,20 @@ def render_site_html(site: Row, section: str = "home", preview: bool = False) ->
         },
     }
     page = pages.get(section, pages["home"])
+    card_links = {
+        "home": [nav_research, nav_downloads, nav_markets],
+        "about": [nav_markets, nav_docs, nav_contact],
+        "research": [nav_downloads, nav_markets, nav_docs],
+        "markets": [nav_research, nav_docs, nav_insights],
+        "insights": [nav_research, nav_downloads, nav_docs],
+        "docs": [nav_downloads, nav_insights, nav_markets],
+        "downloads": [nav_research, nav_docs, nav_assets],
+        "assets": [nav_research, nav_docs, nav_downloads],
+        "contact": [nav_research, nav_downloads, nav_markets],
+    }.get(section, [nav_home, nav_docs, nav_downloads])
     cards = "\n".join(
-        f'      <div class="panel feature"><span class="kicker">{label}</span><strong>{title}</strong><p>{desc}</p></div>'
-        for label, title, desc in page["cards"]
+        f'      <a class="panel feature" href="{card_links[index]}"><span class="kicker">{label}</span><strong>{title}</strong><p>{desc}</p><span class="card-action">Read more</span></a>'
+        for index, (label, title, desc) in enumerate(page["cards"])
     )
     return f"""<!doctype html>
 <html lang="en">
@@ -397,7 +641,8 @@ def render_site_html(site: Row, section: str = "home", preview: bool = False) ->
     .nav {{ display: flex; align-items: center; justify-content: space-between; min-height: 64px; gap: 20px; }}
     .brand {{ font-weight: 700; font-size: 18px; display: flex; gap: 10px; align-items: center; letter-spacing: .03em; }}
     .brand-mark {{ width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff, var(--accent-2) 18%, var(--deep) 70%); display: inline-block; }}
-    nav a {{ color: var(--muted); text-decoration: none; margin-left: 20px; font-size: 13px; padding: 8px 0; border-bottom: 2px solid transparent; text-transform: uppercase; letter-spacing: .08em; }}
+    nav {{ display: flex; align-items: center; justify-content: flex-end; gap: 18px; flex-wrap: wrap; }}
+    nav a {{ color: var(--muted); text-decoration: none; font-size: 13px; padding: 8px 0; border-bottom: 2px solid transparent; text-transform: uppercase; letter-spacing: .08em; }}
     nav a.active {{ color: var(--ink); border-bottom-color: var(--accent); }}
     main {{ padding: 0 0 48px; }}
     .hero-band {{ background: var(--deep); color: #fff; padding: 70px 0 34px; }}
@@ -425,6 +670,10 @@ def render_site_html(site: Row, section: str = "home", preview: bool = False) ->
     .metric {{ font-size: 36px; font-weight: 500; color: var(--accent-2); }}
     .panel-label, .kicker {{ color: var(--accent-2); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; }}
     .feature strong {{ display: block; margin: 8px 0; font-size: 20px; font-weight: 500; }}
+    a.feature {{ display: block; text-decoration: none; transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease; }}
+    a.feature:hover, a.feature:focus-visible {{ transform: translateY(-2px); border-color: var(--accent); box-shadow: 0 22px 54px rgba(15, 36, 54, .12); outline: none; }}
+    .card-action {{ display: inline-flex; align-items: center; margin-top: 4px; color: var(--accent); font: 700 13px Arial, Helvetica, sans-serif; text-transform: uppercase; letter-spacing: .06em; }}
+    .card-action::after {{ content: ""; width: 7px; height: 7px; margin-left: 8px; border-top: 2px solid currentColor; border-right: 2px solid currentColor; transform: rotate(45deg); }}
     .list {{ margin: 0; padding-left: 20px; color: var(--muted); }}
     .list.compact li {{ margin-bottom: 6px; }}
     .section {{ margin-top: 34px; }}
@@ -485,7 +734,7 @@ def render_site_html(site: Row, section: str = "home", preview: bool = False) ->
       .hero, .grid, .split, .top-strip, .asset-grid, .editorial, .profile-grid, .news-grid, .contact-band {{ grid-template-columns: 1fr; }}
       .hero-band {{ padding: 42px 0 26px; }}
       .nav {{ align-items: flex-start; flex-direction: column; padding: 14px 0; }}
-      nav a {{ margin: 0 14px 0 0; }}
+      nav {{ justify-content: flex-start; gap: 14px; }}
       .top-strip div {{ border-right: 0; border-bottom: 1px solid var(--line); }}
     }}
   </style>
@@ -496,9 +745,14 @@ def render_site_html(site: Row, section: str = "home", preview: bool = False) ->
       <div class="brand"><span class="brand-mark"></span>{site_name}</div>
       <nav>
         <a class="{active["home"]}" href="{nav_home}">Home</a>
+        <a class="{active["about"]}" href="{nav_about}">About</a>
+        <a class="{active["research"]}" href="{nav_research}">Research</a>
+        <a class="{active["markets"]}" href="{nav_markets}">Markets</a>
+        <a class="{active["insights"]}" href="{nav_insights}">Insights</a>
         <a class="{active["docs"]}" href="{nav_docs}">Docs</a>
         <a class="{active["downloads"]}" href="{nav_downloads}">Downloads</a>
         <a class="{active["assets"]}" href="{nav_assets}">Assets</a>
+        <a class="{active["contact"]}" href="{nav_contact}">Contact</a>
       </nav>
     </div>
   </header>
@@ -559,4 +813,9 @@ def render_all(site: Row, rules: list[Row]) -> RenderedConfig:
         docs_html=render_site_html(site, "docs"),
         downloads_html=render_site_html(site, "downloads"),
         assets_html=render_site_html(site, "assets"),
+        about_html=render_site_html(site, "about"),
+        research_html=render_site_html(site, "research"),
+        markets_html=render_site_html(site, "markets"),
+        insights_html=render_site_html(site, "insights"),
+        contact_html=render_site_html(site, "contact"),
     )

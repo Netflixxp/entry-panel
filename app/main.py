@@ -676,6 +676,46 @@ def site_preview_assets(_: Annotated[str, Depends(current_admin)]) -> HTMLRespon
     return HTMLResponse(render_site_html(site, "assets", preview=True))
 
 
+@app.get("/site/preview/about", response_class=HTMLResponse)
+def site_preview_about(_: Annotated[str, Depends(current_admin)]) -> HTMLResponse:
+    site = fetch_one("SELECT * FROM site_settings WHERE id = 1")
+    if not site:
+        raise HTTPException(404)
+    return HTMLResponse(render_site_html(site, "about", preview=True))
+
+
+@app.get("/site/preview/research", response_class=HTMLResponse)
+def site_preview_research(_: Annotated[str, Depends(current_admin)]) -> HTMLResponse:
+    site = fetch_one("SELECT * FROM site_settings WHERE id = 1")
+    if not site:
+        raise HTTPException(404)
+    return HTMLResponse(render_site_html(site, "research", preview=True))
+
+
+@app.get("/site/preview/markets", response_class=HTMLResponse)
+def site_preview_markets(_: Annotated[str, Depends(current_admin)]) -> HTMLResponse:
+    site = fetch_one("SELECT * FROM site_settings WHERE id = 1")
+    if not site:
+        raise HTTPException(404)
+    return HTMLResponse(render_site_html(site, "markets", preview=True))
+
+
+@app.get("/site/preview/insights", response_class=HTMLResponse)
+def site_preview_insights(_: Annotated[str, Depends(current_admin)]) -> HTMLResponse:
+    site = fetch_one("SELECT * FROM site_settings WHERE id = 1")
+    if not site:
+        raise HTTPException(404)
+    return HTMLResponse(render_site_html(site, "insights", preview=True))
+
+
+@app.get("/site/preview/contact", response_class=HTMLResponse)
+def site_preview_contact(_: Annotated[str, Depends(current_admin)]) -> HTMLResponse:
+    site = fetch_one("SELECT * FROM site_settings WHERE id = 1")
+    if not site:
+        raise HTTPException(404)
+    return HTMLResponse(render_site_html(site, "contact", preview=True))
+
+
 @app.post("/site")
 def update_site(
     _: Annotated[str, Depends(current_admin)],
